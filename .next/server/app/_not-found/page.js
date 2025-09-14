@@ -1,0 +1,14 @@
+const CHUNK_PUBLIC_PATH = "server/app/_not-found/page.js";
+const runtime = require("../../chunks/ssr/[turbopack]_runtime.js");
+runtime.loadChunk("server/chunks/ssr/node_modules_618b3959._.js");
+runtime.loadChunk("server/chunks/ssr/[root-of-the-server]__d8593af1._.js");
+runtime.loadChunk("server/chunks/ssr/app_1f3630ef._.js");
+runtime.loadChunk("server/chunks/ssr/_fc7b5910._.js");
+runtime.loadChunk("server/chunks/ssr/app_error_faecf34d.js");
+runtime.loadChunk("server/chunks/ssr/_670b4046._.js");
+runtime.loadChunk("server/chunks/ssr/node_modules_next_dist_client_components_52871ed1._.js");
+runtime.loadChunk("server/chunks/ssr/node_modules_next_dist_471f1a57._.js");
+runtime.loadChunk("server/chunks/ssr/[root-of-the-server]__fa4fd7fe._.js");
+runtime.getOrInstantiateRuntimeModule("[project]/.next-internal/server/app/_not-found/page/actions.js [app-rsc] (server actions loader, ecmascript)", CHUNK_PUBLIC_PATH);
+runtime.getOrInstantiateRuntimeModule("[project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/_not-found/page { METADATA_0 => \"[project]/app/favicon.ico.mjs { IMAGE => \\\"[project]/app/favicon.ico (static in ecmascript)\\\" } [app-rsc] (structured image object, ecmascript, Next.js Server Component)\", MODULE_1 => \"[project]/app/layout.js [app-rsc] (ecmascript, Next.js Server Component)\", MODULE_2 => \"[project]/app/error.js [app-rsc] (ecmascript, Next.js Server Component)\", MODULE_3 => \"[project]/app/not-found.js [app-rsc] (ecmascript, Next.js Server Component)\", MODULE_4 => \"[project]/node_modules/next/dist/client/components/builtin/forbidden.js [app-rsc] (ecmascript, Next.js Server Component)\", MODULE_5 => \"[project]/node_modules/next/dist/client/components/builtin/unauthorized.js [app-rsc] (ecmascript, Next.js Server Component)\", MODULE_6 => \"[project]/app/not-found.js [app-rsc] (ecmascript, Next.js Server Component)\" } [app-rsc] (ecmascript)", CHUNK_PUBLIC_PATH);
+module.exports = runtime.getOrInstantiateRuntimeModule("[project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/_not-found/page { METADATA_0 => \"[project]/app/favicon.ico.mjs { IMAGE => \\\"[project]/app/favicon.ico (static in ecmascript)\\\" } [app-rsc] (structured image object, ecmascript, Next.js Server Component)\", MODULE_1 => \"[project]/app/layout.js [app-rsc] (ecmascript, Next.js Server Component)\", MODULE_2 => \"[project]/app/error.js [app-rsc] (ecmascript, Next.js Server Component)\", MODULE_3 => \"[project]/app/not-found.js [app-rsc] (ecmascript, Next.js Server Component)\", MODULE_4 => \"[project]/node_modules/next/dist/client/components/builtin/forbidden.js [app-rsc] (ecmascript, Next.js Server Component)\", MODULE_5 => \"[project]/node_modules/next/dist/client/components/builtin/unauthorized.js [app-rsc] (ecmascript, Next.js Server Component)\", MODULE_6 => \"[project]/app/not-found.js [app-rsc] (ecmascript, Next.js Server Component)\" } [app-rsc] (ecmascript)", CHUNK_PUBLIC_PATH).exports;
