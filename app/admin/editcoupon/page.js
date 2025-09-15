@@ -39,12 +39,12 @@ function EditCouponContent() {
 
   useEffect(() => {
     // Fetch categories
-    fetch("http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/products/categories")
+    fetch("https://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/products/categories")
       .then(res => res.json())
       .then(data => setCategories(data.data.categories || []));
     // Fetch coupon details
     if (couponId) {
-      fetch(`http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/admin/coupons/${couponId}`, {
+      fetch(`https://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/admin/coupons/${couponId}`, {
         headers: getAuthHeaders()
       })
         .then(res => res.json())
@@ -110,7 +110,7 @@ function EditCouponContent() {
         validUntil: form.validUntil,
         isActive: form.isActive
       };
-      const res = await fetch(`http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/coupons/${couponId}`, {
+      const res = await fetch(`https://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/coupons/${couponId}`, {
         method: "PUT",
         headers: getAuthHeaders(),
         body: JSON.stringify(payload)

@@ -43,7 +43,7 @@ function TrackOrderContent() {
     setIsLoading(true)
 
     try {
-      const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/orders/${orderId}/track`)
+      const response = await fetch(`${'https://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/orders/${orderId}/track`)
       const data = await response.json()
 
       if (response.ok && data.success) {
@@ -111,7 +111,7 @@ function TrackOrderContent() {
 
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/orders/${orderId}/cancel`, {
+      const response = await fetch(`${'https://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/orders/${orderId}/cancel`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -160,7 +160,7 @@ function TrackOrderContent() {
 
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/reviews/order/${orderData.order._id}`, {
+      const response = await fetch(`${'https://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/reviews/order/${orderData.order._id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

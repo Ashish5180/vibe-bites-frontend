@@ -77,7 +77,7 @@ const CheckoutPage = () => {
     }
 
     try {
-      const orderRes = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/orders`, {
+      const orderRes = await fetch(`${'https://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/orders`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

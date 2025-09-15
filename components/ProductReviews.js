@@ -31,7 +31,7 @@ const ProductReviews = ({ productId, productName }) => {
       setLoading(true)
       setError(null)
       try {
-        const res = await fetch(`http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/reviews/product/${productId}`)
+        const res = await fetch(`https://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/reviews/product/${productId}`)
         if (!res.ok) throw new Error('Failed to fetch reviews')
         const data = await res.json()
         if (data.success) {
@@ -72,7 +72,7 @@ const ProductReviews = ({ productId, productName }) => {
           return
         }
         
-        const res = await fetch('http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/reviews', {
+        const res = await fetch('https://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/reviews', {
           method: 'POST',
           headers: getAuthHeaders(),
           body: JSON.stringify({
@@ -96,7 +96,7 @@ const ProductReviews = ({ productId, productName }) => {
           throw new Error(data.message || 'Failed to submit review')
         }
         if (productId) {
-          const reviewsRes = await fetch(`http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/reviews/product/${productId}`)
+          const reviewsRes = await fetch(`https://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/reviews/product/${productId}`)
           if (reviewsRes.ok) {
             const data = await reviewsRes.json()
             setReviews(data.data.reviews)

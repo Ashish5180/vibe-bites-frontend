@@ -41,7 +41,7 @@ const RazorpayPayment = ({ amount, orderId, onSuccess, onError, userInfo }) => {
     try {
       
       // Get Razorpay key
-      const keyRes = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/payments/razorpay/keys`, {
+      const keyRes = await fetch(`${'https://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/payments/razorpay/keys`, {
         headers: getAuthHeaders()
       })
       const keyData = await keyRes.json()
@@ -51,7 +51,7 @@ const RazorpayPayment = ({ amount, orderId, onSuccess, onError, userInfo }) => {
       }
 
       // Create Razorpay order
-      const orderRes = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/payments/razorpay/create-order`, {
+      const orderRes = await fetch(`${'https://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/payments/razorpay/create-order`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -89,7 +89,7 @@ const RazorpayPayment = ({ amount, orderId, onSuccess, onError, userInfo }) => {
         handler: async function (response) {
           try {
             // Verify payment
-            const verifyRes = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/payments/razorpay/verify`, {
+            const verifyRes = await fetch(`${'https://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/payments/razorpay/verify`, {
               method: 'POST',
               headers: {
           'Content-Type': 'application/json'
