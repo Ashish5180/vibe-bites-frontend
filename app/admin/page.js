@@ -73,7 +73,7 @@ const AdminPage = () => {
           return
         }
 
-        const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/auth/me`, {
+        const response = await fetch(`${'/api'}/auth/me`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -144,7 +144,7 @@ const AdminPage = () => {
 
   const loadDashboardStats = useCallback(async () => {
     try {
-      const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/admin/dashboard`, {
+      const response = await fetch(`${'/api'}/admin/dashboard`, {
         headers: getAuthHeaders()
       })
 
@@ -168,7 +168,7 @@ const AdminPage = () => {
         status: filterStatus
       })
 
-      const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/admin/users?${params}`, {
+      const response = await fetch(`${'/api'}/admin/users?${params}`, {
         headers: getAuthHeaders()
       })
 
@@ -192,7 +192,7 @@ const AdminPage = () => {
         status: filterStatus
       })
 
-      const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/admin/products?${params}`, {
+      const response = await fetch(`${'/api'}/admin/products?${params}`, {
         headers: getAuthHeaders()
       })
 
@@ -218,7 +218,7 @@ const AdminPage = () => {
         status: statusParam
       })
 
-      const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/admin/orders?${params}`, {
+      const response = await fetch(`${'/api'}/admin/orders?${params}`, {
         headers: getAuthHeaders()
       })
 
@@ -243,7 +243,7 @@ const AdminPage = () => {
         status: filterStatus
       })
 
-      const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/admin/coupons?${params}`, {
+      const response = await fetch(`${'/api'}/admin/coupons?${params}`, {
         headers: getAuthHeaders()
       })
 
@@ -266,7 +266,7 @@ const AdminPage = () => {
         status: filterStatus
       })
 
-      const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/reviews/admin?${params}`, {
+      const response = await fetch(`${'/api'}/reviews/admin?${params}`, {
         headers: getAuthHeaders()
       })
 
@@ -291,7 +291,7 @@ const AdminPage = () => {
 
   const handleUserStatusToggle = async (userId, currentStatus) => {
     try {
-      const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/admin/users/${userId}/status`, {
+      const response = await fetch(`${'/api'}/admin/users/${userId}/status`, {
         method: 'PUT',
         headers: getAuthHeaders(),
         body: JSON.stringify({ isActive: !currentStatus })
@@ -311,7 +311,7 @@ const AdminPage = () => {
 
   const handleOrderStatusUpdate = async (orderId, newStatus) => {
     try {
-      const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/admin/orders/${orderId}/status`, {
+      const response = await fetch(`${'/api'}/admin/orders/${orderId}/status`, {
         method: 'PUT',
         headers: getAuthHeaders(),
         body: JSON.stringify({ status: newStatus })
@@ -332,7 +332,7 @@ const AdminPage = () => {
 
   const handleReviewStatusToggle = async (reviewId, isActive) => {
     try {
-      const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/reviews/admin/${reviewId}/status`, {
+      const response = await fetch(`${'/api'}/reviews/admin/${reviewId}/status`, {
         method: 'PUT',
         headers: getAuthHeaders(),
         body: JSON.stringify({ isActive })
@@ -371,7 +371,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
     if (!confirm(`Are you sure you want to delete this ${type}?`)) return
 
     try {
-      const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/admin/${type}/${id}`, {
+      const response = await fetch(`${'/api'}/admin/${type}/${id}`, {
         method: 'DELETE',
         headers: getAuthHeaders()
       })

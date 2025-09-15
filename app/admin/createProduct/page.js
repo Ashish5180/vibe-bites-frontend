@@ -13,7 +13,7 @@ const CreateProductPage = () => {
   const [user, setUser] = useState(null)
   const [loadingAuth, setLoadingAuth] = useState(true)
   const [submitting, setSubmitting] = useState(false)
-  const apiBase = 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'
+  const apiBase = '/api'
   const [categories, setCategories] = useState([])
 
   // Helper function to get auth headers

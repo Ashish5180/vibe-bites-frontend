@@ -16,7 +16,7 @@ function EditProductContent() {
   const [categories, setCategories] = useState([])
   const [product, setProduct] = useState(null)
   
-  const apiBase = 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'
+  const apiBase = '/api'
   const productId = searchParams.get('id')
 
   // Helper function to get auth headers

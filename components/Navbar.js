@@ -45,7 +45,7 @@ const Navbar = () => {
       router.push('/login')
       return
     }
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/auth/me`, {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || '/api'}/auth/me`, {
       headers: getAuthHeaders()
     })
       .then(r => r.json())
