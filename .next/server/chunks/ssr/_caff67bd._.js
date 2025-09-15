@@ -52,7 +52,7 @@ const Navbar = ()=>{
             router.push('/login');
             return;
         }
-        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/auth/me`, {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/auth/me`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             },
@@ -1127,7 +1127,7 @@ const TrackOrderPage = ()=>{
         }
         setIsLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/orders/${orderId}/track`);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/orders/${orderId}/track`);
             const data = await response.json();
             if (response.ok && data.success) {
                 setOrderData(data.data);
@@ -1228,7 +1228,7 @@ const TrackOrderPage = ()=>{
         const description = prompt('Please provide additional details (optional):') || '';
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/orders/${orderId}/cancel`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/orders/${orderId}/cancel`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -1278,7 +1278,7 @@ const TrackOrderPage = ()=>{
         }
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/reviews/order/${orderData.order._id}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/reviews/order/${orderData.order._id}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -22,6 +22,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$re
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$x$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__X$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/x.js [app-client] (ecmascript) <export default as X>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$user$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__User$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/user.js [app-client] (ecmascript) <export default as User>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$heart$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Heart$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/heart.js [app-client] (ecmascript) <export default as Heart>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$log$2d$out$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__LogOut$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/log-out.js [app-client] (ecmascript) <export default as LogOut>");
 ;
 var _s = __turbopack_context__.k.signature();
 'use client';
@@ -40,6 +41,14 @@ const Navbar = ()=>{
     const { addToast } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$Toaster$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useToast"])();
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"])();
     const cartCount = getCartCount();
+    // Helper function to get auth headers
+    const getAuthHeaders = ()=>{
+        const token = localStorage.getItem('token');
+        return {
+            'Authorization': "Bearer ".concat(token),
+            'Content-Type': 'application/json'
+        };
+    };
     const toggleMenu = ()=>{
         setIsMenuOpen(!isMenuOpen);
     };
@@ -57,11 +66,8 @@ const Navbar = ()=>{
             router.push('/login');
             return;
         }
-        fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api', "/auth/me"), {
-            headers: {
-                'Authorization': "Bearer ".concat(token)
-            },
-            credentials: 'include'
+        fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api', "/auth/me"), {
+            headers: getAuthHeaders()
         }).then((r)=>r.json()).then((data)=>{
             if (data.success) {
                 var _data_data_user;
@@ -107,12 +113,12 @@ const Navbar = ()=>{
                                             priority: true
                                         }, void 0, false, {
                                             fileName: "[project]/components/Navbar.js",
-                                            lineNumber: 76,
+                                            lineNumber: 84,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0))
                                     }, void 0, false, {
                                         fileName: "[project]/components/Navbar.js",
-                                        lineNumber: 75,
+                                        lineNumber: 83,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -120,18 +126,18 @@ const Navbar = ()=>{
                                         children: "VIBE BITES"
                                     }, void 0, false, {
                                         fileName: "[project]/components/Navbar.js",
-                                        lineNumber: 85,
+                                        lineNumber: 93,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/Navbar.js",
-                                lineNumber: 74,
+                                lineNumber: 82,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0))
                         }, void 0, false, {
                             fileName: "[project]/components/Navbar.js",
-                            lineNumber: 73,
+                            lineNumber: 81,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -141,49 +147,49 @@ const Navbar = ()=>{
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                         href: "/",
-                                        className: "text-vibe-brown hover:text-vibe-cookie px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                                        className: "text-vibe-brown hover:text-vibe-cookie px-3 py-2 rounded-md text-sm font-medium transition-colors relative z-50",
                                         children: "Home"
                                     }, void 0, false, {
                                         fileName: "[project]/components/Navbar.js",
-                                        lineNumber: 94,
+                                        lineNumber: 102,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                         href: "/products",
-                                        className: "text-vibe-brown hover:text-vibe-cookie px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                                        className: "text-vibe-brown hover:text-vibe-cookie px-3 py-2 rounded-md text-sm font-medium transition-colors relative z-50",
                                         children: "Products"
                                     }, void 0, false, {
                                         fileName: "[project]/components/Navbar.js",
-                                        lineNumber: 100,
+                                        lineNumber: 108,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                         href: "/about",
-                                        className: "text-vibe-brown hover:text-vibe-cookie px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                                        className: "text-vibe-brown hover:text-vibe-cookie px-3 py-2 rounded-md text-sm font-medium transition-colors relative z-50",
                                         children: "About"
                                     }, void 0, false, {
                                         fileName: "[project]/components/Navbar.js",
-                                        lineNumber: 106,
+                                        lineNumber: 114,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                         href: "/contact",
-                                        className: "text-vibe-brown hover:text-vibe-cookie px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                                        className: "text-vibe-brown hover:text-vibe-cookie px-3 py-2 rounded-md text-sm font-medium transition-colors relative z-50",
                                         children: "Contact"
                                     }, void 0, false, {
                                         fileName: "[project]/components/Navbar.js",
-                                        lineNumber: 112,
+                                        lineNumber: 120,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/Navbar.js",
-                                lineNumber: 93,
+                                lineNumber: 101,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0))
                         }, void 0, false, {
                             fileName: "[project]/components/Navbar.js",
-                            lineNumber: 92,
+                            lineNumber: 100,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -198,12 +204,12 @@ const Navbar = ()=>{
                                             className: "h-5 w-5 text-vibe-brown"
                                         }, void 0, false, {
                                             fileName: "[project]/components/Navbar.js",
-                                            lineNumber: 125,
+                                            lineNumber: 133,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0))
                                     }, void 0, false, {
                                         fileName: "[project]/components/Navbar.js",
-                                        lineNumber: 124,
+                                        lineNumber: 132,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -214,18 +220,18 @@ const Navbar = ()=>{
                                         className: "block w-full pl-10 pr-3 py-2 border border-vibe-cookie rounded-full text-sm bg-white text-vibe-brown placeholder-vibe-brown focus:outline-none focus:ring-2 focus:ring-vibe-cookie focus:border-transparent"
                                     }, void 0, false, {
                                         fileName: "[project]/components/Navbar.js",
-                                        lineNumber: 127,
+                                        lineNumber: 135,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/Navbar.js",
-                                lineNumber: 123,
+                                lineNumber: 131,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0))
                         }, void 0, false, {
                             fileName: "[project]/components/Navbar.js",
-                            lineNumber: 122,
+                            lineNumber: 130,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -239,12 +245,12 @@ const Navbar = ()=>{
                                         className: "h-6 w-6"
                                     }, void 0, false, {
                                         fileName: "[project]/components/Navbar.js",
-                                        lineNumber: 144,
+                                        lineNumber: 152,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/components/Navbar.js",
-                                    lineNumber: 139,
+                                    lineNumber: 147,
                                     columnNumber: 13
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -255,12 +261,12 @@ const Navbar = ()=>{
                                         className: "h-6 w-6"
                                     }, void 0, false, {
                                         fileName: "[project]/components/Navbar.js",
-                                        lineNumber: 151,
+                                        lineNumber: 159,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/components/Navbar.js",
-                                    lineNumber: 146,
+                                    lineNumber: 154,
                                     columnNumber: 13
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -272,7 +278,7 @@ const Navbar = ()=>{
                                             className: "h-6 w-6"
                                         }, void 0, false, {
                                             fileName: "[project]/components/Navbar.js",
-                                            lineNumber: 158,
+                                            lineNumber: 166,
                                             columnNumber: 15
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         cartCount > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -280,19 +286,19 @@ const Navbar = ()=>{
                                             children: cartCount
                                         }, void 0, false, {
                                             fileName: "[project]/components/Navbar.js",
-                                            lineNumber: 160,
+                                            lineNumber: 168,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0))
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/Navbar.js",
-                                    lineNumber: 153,
+                                    lineNumber: 161,
                                     columnNumber: 13
                                 }, ("TURBOPACK compile-time value", void 0))
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/Navbar.js",
-                            lineNumber: 138,
+                            lineNumber: 146,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -305,34 +311,34 @@ const Navbar = ()=>{
                                     className: "h-6 w-6"
                                 }, void 0, false, {
                                     fileName: "[project]/components/Navbar.js",
-                                    lineNumber: 175,
+                                    lineNumber: 183,
                                     columnNumber: 17
                                 }, ("TURBOPACK compile-time value", void 0)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$menu$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Menu$3e$__["Menu"], {
                                     className: "h-6 w-6"
                                 }, void 0, false, {
                                     fileName: "[project]/components/Navbar.js",
-                                    lineNumber: 177,
+                                    lineNumber: 185,
                                     columnNumber: 17
                                 }, ("TURBOPACK compile-time value", void 0))
                             }, void 0, false, {
                                 fileName: "[project]/components/Navbar.js",
-                                lineNumber: 169,
+                                lineNumber: 177,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0))
                         }, void 0, false, {
                             fileName: "[project]/components/Navbar.js",
-                            lineNumber: 168,
+                            lineNumber: 176,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0))
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/Navbar.js",
-                    lineNumber: 71,
+                    lineNumber: 79,
                     columnNumber: 9
                 }, ("TURBOPACK compile-time value", void 0))
             }, void 0, false, {
                 fileName: "[project]/components/Navbar.js",
-                lineNumber: 70,
+                lineNumber: 78,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             isMenuOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -342,12 +348,12 @@ const Navbar = ()=>{
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                             href: "/",
-                            className: "text-vibe-brown hover:text-vibe-cookie block px-3 py-2 rounded-md text-base font-medium transition-colors",
+                            className: " relative text-vibe-brown hover:text-vibe-cookie block px-3 py-2 rounded-md text-base font-medium transition-colors z-50",
                             onClick: ()=>setIsMenuOpen(false),
                             children: "Home"
                         }, void 0, false, {
                             fileName: "[project]/components/Navbar.js",
-                            lineNumber: 188,
+                            lineNumber: 196,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -357,7 +363,7 @@ const Navbar = ()=>{
                             children: "Products"
                         }, void 0, false, {
                             fileName: "[project]/components/Navbar.js",
-                            lineNumber: 195,
+                            lineNumber: 203,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -367,7 +373,7 @@ const Navbar = ()=>{
                             children: "About"
                         }, void 0, false, {
                             fileName: "[project]/components/Navbar.js",
-                            lineNumber: 202,
+                            lineNumber: 210,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -377,7 +383,7 @@ const Navbar = ()=>{
                             children: "Contact"
                         }, void 0, false, {
                             fileName: "[project]/components/Navbar.js",
-                            lineNumber: 209,
+                            lineNumber: 217,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -392,12 +398,12 @@ const Navbar = ()=>{
                                             className: "h-5 w-5 text-vibe-brown"
                                         }, void 0, false, {
                                             fileName: "[project]/components/Navbar.js",
-                                            lineNumber: 221,
+                                            lineNumber: 229,
                                             columnNumber: 19
                                         }, ("TURBOPACK compile-time value", void 0))
                                     }, void 0, false, {
                                         fileName: "[project]/components/Navbar.js",
-                                        lineNumber: 220,
+                                        lineNumber: 228,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -408,18 +414,18 @@ const Navbar = ()=>{
                                         className: "block w-full pl-10 pr-3 py-2 border border-vibe-cookie rounded-full text-sm bg-white text-vibe-brown placeholder-vibe-brown focus:outline-none focus:ring-2 focus:ring-vibe-cookie focus:border-transparent"
                                     }, void 0, false, {
                                         fileName: "[project]/components/Navbar.js",
-                                        lineNumber: 223,
+                                        lineNumber: 231,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/Navbar.js",
-                                lineNumber: 219,
+                                lineNumber: 227,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0))
                         }, void 0, false, {
                             fileName: "[project]/components/Navbar.js",
-                            lineNumber: 218,
+                            lineNumber: 226,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -436,12 +442,12 @@ const Navbar = ()=>{
                                         className: "h-6 w-6"
                                     }, void 0, false, {
                                         fileName: "[project]/components/Navbar.js",
-                                        lineNumber: 243,
+                                        lineNumber: 251,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/components/Navbar.js",
-                                    lineNumber: 235,
+                                    lineNumber: 243,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -455,12 +461,12 @@ const Navbar = ()=>{
                                         className: "h-6 w-6"
                                     }, void 0, false, {
                                         fileName: "[project]/components/Navbar.js",
-                                        lineNumber: 253,
+                                        lineNumber: 261,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/components/Navbar.js",
-                                    lineNumber: 245,
+                                    lineNumber: 253,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -475,7 +481,7 @@ const Navbar = ()=>{
                                             className: "h-6 w-6"
                                         }, void 0, false, {
                                             fileName: "[project]/components/Navbar.js",
-                                            lineNumber: 263,
+                                            lineNumber: 271,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         cartCount > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -483,36 +489,64 @@ const Navbar = ()=>{
                                             children: cartCount
                                         }, void 0, false, {
                                             fileName: "[project]/components/Navbar.js",
-                                            lineNumber: 265,
+                                            lineNumber: 273,
                                             columnNumber: 19
                                         }, ("TURBOPACK compile-time value", void 0))
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/Navbar.js",
-                                    lineNumber: 255,
+                                    lineNumber: 263,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/Navbar.js",
-                            lineNumber: 234,
+                            lineNumber: 242,
                             columnNumber: 13
+                        }, ("TURBOPACK compile-time value", void 0)),
+                        localStorage.getItem('token') && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "px-3 py-2 border-t border-vibe-cookie/20",
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                onClick: ()=>{
+                                    router.push('/logout');
+                                    setIsMenuOpen(false);
+                                },
+                                className: "flex items-center gap-2 w-full px-3 py-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors duration-200 font-medium",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$log$2d$out$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__LogOut$3e$__["LogOut"], {
+                                        className: "h-4 w-4"
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/Navbar.js",
+                                        lineNumber: 290,
+                                        columnNumber: 19
+                                    }, ("TURBOPACK compile-time value", void 0)),
+                                    "Logout"
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/components/Navbar.js",
+                                lineNumber: 283,
+                                columnNumber: 17
+                            }, ("TURBOPACK compile-time value", void 0))
+                        }, void 0, false, {
+                            fileName: "[project]/components/Navbar.js",
+                            lineNumber: 282,
+                            columnNumber: 15
                         }, ("TURBOPACK compile-time value", void 0))
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/Navbar.js",
-                    lineNumber: 187,
+                    lineNumber: 195,
                     columnNumber: 11
                 }, ("TURBOPACK compile-time value", void 0))
             }, void 0, false, {
                 fileName: "[project]/components/Navbar.js",
-                lineNumber: 186,
+                lineNumber: 194,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0))
         ]
     }, void 0, true, {
         fileName: "[project]/components/Navbar.js",
-        lineNumber: 69,
+        lineNumber: 77,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };
@@ -1137,13 +1171,21 @@ const ProductReviews = (param)=>{
     const [totalReviews, setTotalReviews] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(0);
     const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(true);
     const [error, setError] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
+    // Helper function to get auth headers
+    const getAuthHeaders = ()=>{
+        const token = localStorage.getItem('token');
+        return {
+            'Authorization': "Bearer ".concat(token),
+            'Content-Type': 'application/json'
+        };
+    };
     __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].useEffect({
         "ProductReviews.useEffect": ()=>{
             async function fetchReviews() {
                 setLoading(true);
                 setError(null);
                 try {
-                    const res = await fetch("http://localhost:8080/api/reviews/product/".concat(productId));
+                    const res = await fetch("http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/reviews/product/".concat(productId));
                     if (!res.ok) throw new Error('Failed to fetch reviews');
                     const data = await res.json();
                     if (data.success) {
@@ -1166,20 +1208,27 @@ const ProductReviews = (param)=>{
         e.preventDefault();
         async function submitReview() {
             try {
-                // Get token from cookie
-                function getCookie(name) {
-                    const value = "; ".concat(document.cookie);
-                    const parts = value.split("; ".concat(name, "="));
-                    if (parts.length === 2) return parts.pop().split(';').shift();
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    alert('Please login to submit a review');
+                    return;
                 }
-                const token = getCookie('token');
-                const res = await fetch('http://localhost:8080/api/reviews', {
+                // Client-side validation
+                if (!newReview.title.trim() || newReview.title.trim().length < 5) {
+                    alert('Title must be at least 5 characters long');
+                    return;
+                }
+                if (!newReview.comment.trim() || newReview.comment.trim().length < 10) {
+                    alert('Comment must be at least 10 characters long');
+                    return;
+                }
+                if (newReview.rating < 1 || newReview.rating > 5) {
+                    alert('Rating must be between 1 and 5');
+                    return;
+                }
+                const res = await fetch('http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/reviews', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': "Bearer ".concat(token)
-                    },
-                    credentials: 'include',
+                    headers: getAuthHeaders(),
                     body: JSON.stringify({
                         productId,
                         rating: newReview.rating,
@@ -1187,16 +1236,24 @@ const ProductReviews = (param)=>{
                         comment: newReview.comment
                     })
                 });
-                if (!res.ok) throw new Error('Failed to submit review');
-                setShowReviewForm(false);
-                setNewReview({
-                    rating: 5,
-                    title: '',
-                    comment: ''
-                });
+                if (!res.ok) {
+                    const errorData = await res.json().catch(()=>({}));
+                    throw new Error(errorData.message || 'Failed to submit review');
+                }
+                const data = await res.json();
+                if (data.success) {
+                    setShowReviewForm(false);
+                    setNewReview({
+                        rating: 5,
+                        title: '',
+                        comment: ''
+                    });
                 // Refresh reviews after submit
+                } else {
+                    throw new Error(data.message || 'Failed to submit review');
+                }
                 if (productId) {
-                    const reviewsRes = await fetch("http://localhost:8080/api/reviews/product/".concat(productId));
+                    const reviewsRes = await fetch("http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/reviews/product/".concat(productId));
                     if (reviewsRes.ok) {
                         const data = await reviewsRes.json();
                         setReviews(data.data.reviews);
@@ -1231,7 +1288,7 @@ const ProductReviews = (param)=>{
                                 children: "Customer Reviews"
                             }, void 0, false, {
                                 fileName: "[project]/components/ProductReviews.js",
-                                lineNumber: 100,
+                                lineNumber: 127,
                                 columnNumber: 11
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1240,13 +1297,13 @@ const ProductReviews = (param)=>{
                                 children: "Write a Review"
                             }, void 0, false, {
                                 fileName: "[project]/components/ProductReviews.js",
-                                lineNumber: 101,
+                                lineNumber: 128,
                                 columnNumber: 11
                             }, ("TURBOPACK compile-time value", void 0))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/ProductReviews.js",
-                        lineNumber: 99,
+                        lineNumber: 126,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1260,7 +1317,7 @@ const ProductReviews = (param)=>{
                                         children: averageRating.toFixed(1)
                                     }, void 0, false, {
                                         fileName: "[project]/components/ProductReviews.js",
-                                        lineNumber: 112,
+                                        lineNumber: 139,
                                         columnNumber: 13
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1271,12 +1328,12 @@ const ProductReviews = (param)=>{
                                                 className: "h-5 w-5 ".concat(i < Math.floor(averageRating) ? 'text-yellow-400 fill-current' : 'text-gray-300')
                                             }, i, false, {
                                                 fileName: "[project]/components/ProductReviews.js",
-                                                lineNumber: 115,
+                                                lineNumber: 142,
                                                 columnNumber: 17
                                             }, ("TURBOPACK compile-time value", void 0)))
                                     }, void 0, false, {
                                         fileName: "[project]/components/ProductReviews.js",
-                                        lineNumber: 113,
+                                        lineNumber: 140,
                                         columnNumber: 13
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1287,13 +1344,13 @@ const ProductReviews = (param)=>{
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/ProductReviews.js",
-                                        lineNumber: 125,
+                                        lineNumber: 152,
                                         columnNumber: 13
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/ProductReviews.js",
-                                lineNumber: 111,
+                                lineNumber: 138,
                                 columnNumber: 11
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1315,7 +1372,7 @@ const ProductReviews = (param)=>{
                                                 children: rating
                                             }, void 0, false, {
                                                 fileName: "[project]/components/ProductReviews.js",
-                                                lineNumber: 137,
+                                                lineNumber: 164,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1327,12 +1384,12 @@ const ProductReviews = (param)=>{
                                                     }
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/ProductReviews.js",
-                                                    lineNumber: 139,
+                                                    lineNumber: 166,
                                                     columnNumber: 21
                                                 }, ("TURBOPACK compile-time value", void 0))
                                             }, void 0, false, {
                                                 fileName: "[project]/components/ProductReviews.js",
-                                                lineNumber: 138,
+                                                lineNumber: 165,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1340,31 +1397,31 @@ const ProductReviews = (param)=>{
                                                 children: count
                                             }, void 0, false, {
                                                 fileName: "[project]/components/ProductReviews.js",
-                                                lineNumber: 144,
+                                                lineNumber: 171,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, rating, true, {
                                         fileName: "[project]/components/ProductReviews.js",
-                                        lineNumber: 136,
+                                        lineNumber: 163,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0));
                                 })
                             }, void 0, false, {
                                 fileName: "[project]/components/ProductReviews.js",
-                                lineNumber: 131,
+                                lineNumber: 158,
                                 columnNumber: 11
                             }, ("TURBOPACK compile-time value", void 0))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/ProductReviews.js",
-                        lineNumber: 110,
+                        lineNumber: 137,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/ProductReviews.js",
-                lineNumber: 98,
+                lineNumber: 125,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             showReviewForm && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1375,7 +1432,7 @@ const ProductReviews = (param)=>{
                         children: "Write Your Review"
                     }, void 0, false, {
                         fileName: "[project]/components/ProductReviews.js",
-                        lineNumber: 155,
+                        lineNumber: 182,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -1389,7 +1446,7 @@ const ProductReviews = (param)=>{
                                         children: "Rating"
                                     }, void 0, false, {
                                         fileName: "[project]/components/ProductReviews.js",
-                                        lineNumber: 158,
+                                        lineNumber: 185,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1411,23 +1468,23 @@ const ProductReviews = (param)=>{
                                                     className: "h-6 w-6 ".concat(rating <= newReview.rating ? 'text-yellow-400 fill-current' : 'text-gray-300')
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/ProductReviews.js",
-                                                    lineNumber: 167,
+                                                    lineNumber: 194,
                                                     columnNumber: 21
                                                 }, ("TURBOPACK compile-time value", void 0))
                                             }, rating, false, {
                                                 fileName: "[project]/components/ProductReviews.js",
-                                                lineNumber: 161,
+                                                lineNumber: 188,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)))
                                     }, void 0, false, {
                                         fileName: "[project]/components/ProductReviews.js",
-                                        lineNumber: 159,
+                                        lineNumber: 186,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/ProductReviews.js",
-                                lineNumber: 157,
+                                lineNumber: 184,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1437,7 +1494,7 @@ const ProductReviews = (param)=>{
                                         children: "Review Title"
                                     }, void 0, false, {
                                         fileName: "[project]/components/ProductReviews.js",
-                                        lineNumber: 181,
+                                        lineNumber: 208,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1452,13 +1509,13 @@ const ProductReviews = (param)=>{
                                         required: true
                                     }, void 0, false, {
                                         fileName: "[project]/components/ProductReviews.js",
-                                        lineNumber: 182,
+                                        lineNumber: 209,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/ProductReviews.js",
-                                lineNumber: 180,
+                                lineNumber: 207,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1468,7 +1525,7 @@ const ProductReviews = (param)=>{
                                         children: "Your Review"
                                     }, void 0, false, {
                                         fileName: "[project]/components/ProductReviews.js",
-                                        lineNumber: 193,
+                                        lineNumber: 220,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
@@ -1483,13 +1540,13 @@ const ProductReviews = (param)=>{
                                         required: true
                                     }, void 0, false, {
                                         fileName: "[project]/components/ProductReviews.js",
-                                        lineNumber: 194,
+                                        lineNumber: 221,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/ProductReviews.js",
-                                lineNumber: 192,
+                                lineNumber: 219,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1501,7 +1558,7 @@ const ProductReviews = (param)=>{
                                         children: "Submit Review"
                                     }, void 0, false, {
                                         fileName: "[project]/components/ProductReviews.js",
-                                        lineNumber: 205,
+                                        lineNumber: 232,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1511,25 +1568,25 @@ const ProductReviews = (param)=>{
                                         children: "Cancel"
                                     }, void 0, false, {
                                         fileName: "[project]/components/ProductReviews.js",
-                                        lineNumber: 211,
+                                        lineNumber: 238,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/ProductReviews.js",
-                                lineNumber: 204,
+                                lineNumber: 231,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/ProductReviews.js",
-                        lineNumber: 156,
+                        lineNumber: 183,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/ProductReviews.js",
-                lineNumber: 154,
+                lineNumber: 181,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0)),
             loading && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1539,7 +1596,7 @@ const ProductReviews = (param)=>{
                         className: "animate-spin rounded-full h-8 w-8 border-b-2 border-vibe-cookie mx-auto"
                     }, void 0, false, {
                         fileName: "[project]/components/ProductReviews.js",
-                        lineNumber: 226,
+                        lineNumber: 253,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1547,13 +1604,13 @@ const ProductReviews = (param)=>{
                         children: "Loading reviews..."
                     }, void 0, false, {
                         fileName: "[project]/components/ProductReviews.js",
-                        lineNumber: 227,
+                        lineNumber: 254,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/ProductReviews.js",
-                lineNumber: 225,
+                lineNumber: 252,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0)),
             error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1566,12 +1623,12 @@ const ProductReviews = (param)=>{
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/ProductReviews.js",
-                    lineNumber: 234,
+                    lineNumber: 261,
                     columnNumber: 11
                 }, ("TURBOPACK compile-time value", void 0))
             }, void 0, false, {
                 fileName: "[project]/components/ProductReviews.js",
-                lineNumber: 233,
+                lineNumber: 260,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0)),
             !loading && !error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1583,12 +1640,12 @@ const ProductReviews = (param)=>{
                         children: "No reviews yet. Be the first to review this product!"
                     }, void 0, false, {
                         fileName: "[project]/components/ProductReviews.js",
-                        lineNumber: 243,
+                        lineNumber: 270,
                         columnNumber: 15
                     }, ("TURBOPACK compile-time value", void 0))
                 }, void 0, false, {
                     fileName: "[project]/components/ProductReviews.js",
-                    lineNumber: 242,
+                    lineNumber: 269,
                     columnNumber: 13
                 }, ("TURBOPACK compile-time value", void 0)) : reviews.map((review)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "border-b border-vibe-cookie/20 pb-6 last:border-b-0",
@@ -1604,18 +1661,18 @@ const ProductReviews = (param)=>{
                                         className: "object-cover"
                                     }, void 0, false, {
                                         fileName: "[project]/components/ProductReviews.js",
-                                        lineNumber: 251,
+                                        lineNumber: 278,
                                         columnNumber: 19
                                     }, ("TURBOPACK compile-time value", void 0)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$user$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__User$3e$__["User"], {
                                         className: "h-8 w-8 text-vibe-brown"
                                     }, void 0, false, {
                                         fileName: "[project]/components/ProductReviews.js",
-                                        lineNumber: 258,
+                                        lineNumber: 285,
                                         columnNumber: 19
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/components/ProductReviews.js",
-                                    lineNumber: 249,
+                                    lineNumber: 276,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1629,7 +1686,7 @@ const ProductReviews = (param)=>{
                                                     children: review.userName
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/ProductReviews.js",
-                                                    lineNumber: 263,
+                                                    lineNumber: 290,
                                                     columnNumber: 19
                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                 review.verified && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1637,13 +1694,13 @@ const ProductReviews = (param)=>{
                                                     children: "Verified Purchase"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/ProductReviews.js",
-                                                    lineNumber: 265,
+                                                    lineNumber: 292,
                                                     columnNumber: 21
                                                 }, ("TURBOPACK compile-time value", void 0))
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/ProductReviews.js",
-                                            lineNumber: 262,
+                                            lineNumber: 289,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1657,12 +1714,12 @@ const ProductReviews = (param)=>{
                                                             className: "h-4 w-4 ".concat(i < review.rating ? 'text-yellow-400 fill-current' : 'text-gray-300')
                                                         }, i, false, {
                                                             fileName: "[project]/components/ProductReviews.js",
-                                                            lineNumber: 273,
+                                                            lineNumber: 300,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0)))
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/ProductReviews.js",
-                                                    lineNumber: 271,
+                                                    lineNumber: 298,
                                                     columnNumber: 19
                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1670,13 +1727,13 @@ const ProductReviews = (param)=>{
                                                     children: formatDate(review.date)
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/ProductReviews.js",
-                                                    lineNumber: 283,
+                                                    lineNumber: 310,
                                                     columnNumber: 19
                                                 }, ("TURBOPACK compile-time value", void 0))
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/ProductReviews.js",
-                                            lineNumber: 270,
+                                            lineNumber: 297,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h5", {
@@ -1684,7 +1741,7 @@ const ProductReviews = (param)=>{
                                             children: review.title
                                         }, void 0, false, {
                                             fileName: "[project]/components/ProductReviews.js",
-                                            lineNumber: 287,
+                                            lineNumber: 314,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1692,29 +1749,29 @@ const ProductReviews = (param)=>{
                                             children: review.comment
                                         }, void 0, false, {
                                             fileName: "[project]/components/ProductReviews.js",
-                                            lineNumber: 288,
+                                            lineNumber: 315,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0))
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/ProductReviews.js",
-                                    lineNumber: 261,
+                                    lineNumber: 288,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/ProductReviews.js",
-                            lineNumber: 248,
+                            lineNumber: 275,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0))
                     }, review.id, false, {
                         fileName: "[project]/components/ProductReviews.js",
-                        lineNumber: 247,
+                        lineNumber: 274,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)))
             }, void 0, false, {
                 fileName: "[project]/components/ProductReviews.js",
-                lineNumber: 240,
+                lineNumber: 267,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0)),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1724,18 +1781,18 @@ const ProductReviews = (param)=>{
                     children: "Load More Reviews"
                 }, void 0, false, {
                     fileName: "[project]/components/ProductReviews.js",
-                    lineNumber: 299,
+                    lineNumber: 326,
                     columnNumber: 9
                 }, ("TURBOPACK compile-time value", void 0))
             }, void 0, false, {
                 fileName: "[project]/components/ProductReviews.js",
-                lineNumber: 298,
+                lineNumber: 325,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0))
         ]
     }, void 0, true, {
         fileName: "[project]/components/ProductReviews.js",
-        lineNumber: 96,
+        lineNumber: 123,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };
@@ -1829,7 +1886,7 @@ function ProductDetailPage() {
                     setError(null);
                     try {
                         var _data_data;
-                        const response = await fetch("http://localhost:8080/api/products/".concat(params.id), {
+                        const response = await fetch("http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/products/".concat(params.id), {
                             headers: {
                                 'Cache-Control': 'no-cache'
                             }
@@ -2720,14 +2777,6 @@ function ProductDetailPage() {
                         fileName: "[project]/app/product/[id]/page.js",
                         lineNumber: 395,
                         columnNumber: 11
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ProductReviews$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                        productId: product._id || product.id,
-                        productName: product.name
-                    }, void 0, false, {
-                        fileName: "[project]/app/product/[id]/page.js",
-                        lineNumber: 427,
-                        columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
@@ -2737,7 +2786,7 @@ function ProductDetailPage() {
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$Footer$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/app/product/[id]/page.js",
-                lineNumber: 430,
+                lineNumber: 428,
                 columnNumber: 7
             }, this)
         ]

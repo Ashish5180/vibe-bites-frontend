@@ -9,10 +9,16 @@ const LogoutPage = () => {
   useEffect(() => {
     const logout = async () => {
       try {
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/auth/logout`, {
-          method: 'POST',
-          credentials: 'include',
-        });
+        const token = localStorage.getItem('token')
+        if (token) {
+          await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/auth/logout`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          });
+        }
       } catch (e) {}
       localStorage.removeItem("token");
       localStorage.removeItem("user");

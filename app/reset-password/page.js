@@ -72,7 +72,7 @@ const ResetPasswordPage = () => {
     setIsLoading(true)
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/auth/reset-password`, {
+      const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/auth/reset-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

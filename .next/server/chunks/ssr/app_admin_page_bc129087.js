@@ -43,14 +43,34 @@ const AdminPage = ()=>{
     const [filterStatus, setFilterStatus] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('');
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRouter"])();
     const { addToast } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$Toaster$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useToast"])();
+    // Helper function to get auth headers
+    const getAuthHeaders = ()=>{
+        const token = localStorage.getItem('token');
+        return {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        };
+    };
     // Check authentication and admin role
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
         const checkAuth = async ()=>{
             try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/auth/me`, {
-                    credentials: 'include'
+                // Get token from localStorage
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    router.push('/login');
+                    return;
+                }
+                const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/auth/me`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
                 });
                 if (!response.ok) {
+                    // Token might be expired, clear it and redirect to login
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
                     router.push('/login');
                     return;
                 }
@@ -69,6 +89,9 @@ const AdminPage = ()=>{
                 }
             } catch (error) {
                 console.error('Auth check error:', error);
+                // Clear invalid token and redirect
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
                 router.push('/login');
             }
         };
@@ -116,8 +139,8 @@ const AdminPage = ()=>{
     ]);
     const loadDashboardStats = async ()=>{
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/admin/dashboard`, {
-                credentials: 'include'
+            const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/admin/dashboard`, {
+                headers: getAuthHeaders()
             });
             if (response.ok) {
                 const data = await response.json();
@@ -137,8 +160,8 @@ const AdminPage = ()=>{
                 search: searchQuery,
                 status: filterStatus
             });
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/admin/users?${params}`, {
-                credentials: 'include'
+            const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/admin/users?${params}`, {
+                headers: getAuthHeaders()
             });
             if (response.ok) {
                 const data = await response.json();
@@ -158,8 +181,8 @@ const AdminPage = ()=>{
                 search: searchQuery,
                 status: filterStatus
             });
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/admin/products?${params}`, {
-                credentials: 'include'
+            const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/admin/products?${params}`, {
+                headers: getAuthHeaders()
             });
             if (response.ok) {
                 const data = await response.json();
@@ -180,8 +203,8 @@ const AdminPage = ()=>{
                 search: searchQuery,
                 status: statusParam
             });
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/admin/orders?${params}`, {
-                credentials: 'include'
+            const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/admin/orders?${params}`, {
+                headers: getAuthHeaders()
             });
             if (response.ok) {
                 const data = await response.json();
@@ -201,8 +224,8 @@ const AdminPage = ()=>{
                 limit: 10,
                 status: filterStatus
             });
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/admin/coupons?${params}`, {
-                credentials: 'include'
+            const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/admin/coupons?${params}`, {
+                headers: getAuthHeaders()
             });
             if (response.ok) {
                 const data = await response.json();
@@ -221,8 +244,8 @@ const AdminPage = ()=>{
                 limit: 10,
                 status: filterStatus
             });
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/reviews/admin?${params}`, {
-                credentials: 'include'
+            const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/reviews/admin?${params}`, {
+                headers: getAuthHeaders()
             });
             if (response.ok) {
                 const data = await response.json();
@@ -235,20 +258,20 @@ const AdminPage = ()=>{
         }
     };
     const handleLogout = ()=>{
-        router.push('/logout');
+        // Clear localStorage
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        router.push('/login');
         addToast('Logged out successfully', 'success');
     };
     const handleUserStatusToggle = async (userId, currentStatus)=>{
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/admin/users/${userId}/status`, {
+            const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/admin/users/${userId}/status`, {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: getAuthHeaders(),
                 body: JSON.stringify({
                     isActive: !currentStatus
-                }),
-                credentials: 'include'
+                })
             });
             if (response.ok) {
                 addToast(`User ${!currentStatus ? 'activated' : 'deactivated'} successfully`, 'success');
@@ -263,13 +286,9 @@ const AdminPage = ()=>{
     };
     const handleOrderStatusUpdate = async (orderId, newStatus)=>{
         try {
-            const token = localStorage.getItem('token');
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/admin/orders/${orderId}/status`, {
+            const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/admin/orders/${orderId}/status`, {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
+                headers: getAuthHeaders(),
                 body: JSON.stringify({
                     status: newStatus
                 })
@@ -287,13 +306,9 @@ const AdminPage = ()=>{
     };
     const handleReviewStatusToggle = async (reviewId, isActive)=>{
         try {
-            const token = localStorage.getItem('token');
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/reviews/admin/${reviewId}/status`, {
+            const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/reviews/admin/${reviewId}/status`, {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
+                headers: getAuthHeaders(),
                 body: JSON.stringify({
                     isActive
                 })
@@ -328,12 +343,9 @@ Verified: ${review.verified ? 'Yes' : 'No'}
     const handleDelete = async (type, id)=>{
         if (!confirm(`Are you sure you want to delete this ${type}?`)) return;
         try {
-            const token = localStorage.getItem('token');
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/admin/${type}/${id}`, {
+            const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/admin/${type}/${id}`, {
                 method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+                headers: getAuthHeaders()
             });
             if (response.ok) {
                 addToast(`${type.charAt(0).toUpperCase() + type.slice(1)} deleted successfully`, 'success');
@@ -364,12 +376,12 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                 children: "Loading..."
             }, void 0, false, {
                 fileName: "[project]/app/admin/page.js",
-                lineNumber: 377,
+                lineNumber: 393,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0))
         }, void 0, false, {
             fileName: "[project]/app/admin/page.js",
-            lineNumber: 376,
+            lineNumber: 392,
             columnNumber: 7
         }, ("TURBOPACK compile-time value", void 0));
     }
@@ -390,12 +402,12 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                     children: "Admin Dashboard"
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/page.js",
-                                    lineNumber: 389,
+                                    lineNumber: 405,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/page.js",
-                                lineNumber: 388,
+                                lineNumber: 404,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -410,20 +422,20 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                 className: "h-5 w-5"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/page.js",
-                                                lineNumber: 397,
+                                                lineNumber: 413,
                                                 columnNumber: 17
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 children: "Home"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/page.js",
-                                                lineNumber: 398,
+                                                lineNumber: 414,
                                                 columnNumber: 17
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/admin/page.js",
-                                        lineNumber: 392,
+                                        lineNumber: 408,
                                         columnNumber: 13
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -434,7 +446,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/admin/page.js",
-                                        lineNumber: 400,
+                                        lineNumber: 416,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -445,42 +457,42 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                 className: "h-5 w-5"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/page.js",
-                                                lineNumber: 406,
+                                                lineNumber: 422,
                                                 columnNumber: 17
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 children: "Logout"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/page.js",
-                                                lineNumber: 407,
+                                                lineNumber: 423,
                                                 columnNumber: 17
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/admin/page.js",
-                                        lineNumber: 402,
+                                        lineNumber: 418,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/page.js",
-                                lineNumber: 391,
+                                lineNumber: 407,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/page.js",
-                        lineNumber: 387,
+                        lineNumber: 403,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0))
                 }, void 0, false, {
                     fileName: "[project]/app/admin/page.js",
-                    lineNumber: 386,
+                    lineNumber: 402,
                     columnNumber: 9
                 }, ("TURBOPACK compile-time value", void 0))
             }, void 0, false, {
                 fileName: "[project]/app/admin/page.js",
-                lineNumber: 385,
+                lineNumber: 401,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -535,20 +547,20 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                             className: "h-5 w-5"
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/page.js",
-                                            lineNumber: 434,
+                                            lineNumber: 450,
                                             columnNumber: 19
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                             children: tab.label
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/page.js",
-                                            lineNumber: 435,
+                                            lineNumber: 451,
                                             columnNumber: 19
                                         }, ("TURBOPACK compile-time value", void 0))
                                     ]
                                 }, tab.id, true, {
                                     fileName: "[project]/app/admin/page.js",
-                                    lineNumber: 429,
+                                    lineNumber: 445,
                                     columnNumber: 17
                                 }, ("TURBOPACK compile-time value", void 0));
                             }
@@ -565,26 +577,26 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                         className: "h-5 w-5"
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/page.js",
-                                        lineNumber: 454,
+                                        lineNumber: 470,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                         children: tab.label
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/page.js",
-                                        lineNumber: 455,
+                                        lineNumber: 471,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, tab.id, true, {
                                 fileName: "[project]/app/admin/page.js",
-                                lineNumber: 440,
+                                lineNumber: 456,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0));
                         })
                     }, void 0, false, {
                         fileName: "[project]/app/admin/page.js",
-                        lineNumber: 416,
+                        lineNumber: 432,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0)),
                     activeTab === 'dashboard' && dashboardStats && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -604,12 +616,12 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                         className: "h-6 w-6 text-blue-600"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/page.js",
-                                                        lineNumber: 469,
+                                                        lineNumber: 485,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/page.js",
-                                                    lineNumber: 468,
+                                                    lineNumber: 484,
                                                     columnNumber: 19
                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -620,7 +632,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "Total Users"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 472,
+                                                            lineNumber: 488,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -628,24 +640,24 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: dashboardStats.stats.totalUsers
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 473,
+                                                            lineNumber: 489,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/page.js",
-                                                    lineNumber: 471,
+                                                    lineNumber: 487,
                                                     columnNumber: 19
                                                 }, ("TURBOPACK compile-time value", void 0))
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/page.js",
-                                            lineNumber: 467,
+                                            lineNumber: 483,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0))
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/page.js",
-                                        lineNumber: 466,
+                                        lineNumber: 482,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -659,12 +671,12 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                         className: "h-6 w-6 text-green-600"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/page.js",
-                                                        lineNumber: 481,
+                                                        lineNumber: 497,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/page.js",
-                                                    lineNumber: 480,
+                                                    lineNumber: 496,
                                                     columnNumber: 19
                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -675,7 +687,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "Total Products"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 484,
+                                                            lineNumber: 500,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -683,24 +695,24 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: dashboardStats.stats.totalProducts
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 485,
+                                                            lineNumber: 501,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/page.js",
-                                                    lineNumber: 483,
+                                                    lineNumber: 499,
                                                     columnNumber: 19
                                                 }, ("TURBOPACK compile-time value", void 0))
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/page.js",
-                                            lineNumber: 479,
+                                            lineNumber: 495,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0))
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/page.js",
-                                        lineNumber: 478,
+                                        lineNumber: 494,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -714,12 +726,12 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                         className: "h-6 w-6 text-purple-600"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/page.js",
-                                                        lineNumber: 493,
+                                                        lineNumber: 509,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/page.js",
-                                                    lineNumber: 492,
+                                                    lineNumber: 508,
                                                     columnNumber: 19
                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -730,7 +742,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "Total Orders"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 496,
+                                                            lineNumber: 512,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -738,24 +750,24 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: dashboardStats.stats.totalOrders
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 497,
+                                                            lineNumber: 513,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/page.js",
-                                                    lineNumber: 495,
+                                                    lineNumber: 511,
                                                     columnNumber: 19
                                                 }, ("TURBOPACK compile-time value", void 0))
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/page.js",
-                                            lineNumber: 491,
+                                            lineNumber: 507,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0))
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/page.js",
-                                        lineNumber: 490,
+                                        lineNumber: 506,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -769,12 +781,12 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                         className: "h-6 w-6 text-yellow-600"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/page.js",
-                                                        lineNumber: 505,
+                                                        lineNumber: 521,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/page.js",
-                                                    lineNumber: 504,
+                                                    lineNumber: 520,
                                                     columnNumber: 19
                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -785,7 +797,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "Total Revenue"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 508,
+                                                            lineNumber: 524,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -796,30 +808,30 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 509,
+                                                            lineNumber: 525,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/page.js",
-                                                    lineNumber: 507,
+                                                    lineNumber: 523,
                                                     columnNumber: 19
                                                 }, ("TURBOPACK compile-time value", void 0))
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/page.js",
-                                            lineNumber: 503,
+                                            lineNumber: 519,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0))
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/page.js",
-                                        lineNumber: 502,
+                                        lineNumber: 518,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/page.js",
-                                lineNumber: 465,
+                                lineNumber: 481,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -832,12 +844,12 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                             children: "Recent Orders"
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/page.js",
-                                            lineNumber: 518,
+                                            lineNumber: 534,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0))
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/page.js",
-                                        lineNumber: 517,
+                                        lineNumber: 533,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -854,7 +866,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                 children: "Order ID"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 524,
+                                                                lineNumber: 540,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -862,7 +874,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                 children: "Customer"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 525,
+                                                                lineNumber: 541,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -870,7 +882,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                 children: "Amount"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 526,
+                                                                lineNumber: 542,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -878,7 +890,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                 children: "Status"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 527,
+                                                                lineNumber: 543,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -886,18 +898,18 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                 children: "Date"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 528,
+                                                                lineNumber: 544,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/admin/page.js",
-                                                        lineNumber: 523,
+                                                        lineNumber: 539,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/page.js",
-                                                    lineNumber: 522,
+                                                    lineNumber: 538,
                                                     columnNumber: 19
                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
@@ -909,7 +921,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                     children: order.orderNumber || order._id
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/page.js",
-                                                                    lineNumber: 535,
+                                                                    lineNumber: 551,
                                                                     columnNumber: 27
                                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -921,7 +933,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/app/admin/page.js",
-                                                                    lineNumber: 536,
+                                                                    lineNumber: 552,
                                                                     columnNumber: 27
                                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -932,7 +944,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/app/admin/page.js",
-                                                                    lineNumber: 539,
+                                                                    lineNumber: 555,
                                                                     columnNumber: 27
                                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -942,12 +954,12 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                         children: order.orderStatus
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/page.js",
-                                                                        lineNumber: 541,
+                                                                        lineNumber: 557,
                                                                         columnNumber: 29
                                                                     }, ("TURBOPACK compile-time value", void 0))
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/page.js",
-                                                                    lineNumber: 540,
+                                                                    lineNumber: 556,
                                                                     columnNumber: 27
                                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -955,13 +967,13 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                     children: new Date(order.createdAt).toLocaleDateString()
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/page.js",
-                                                                    lineNumber: 552,
+                                                                    lineNumber: 568,
                                                                     columnNumber: 27
                                                                 }, ("TURBOPACK compile-time value", void 0))
                                                             ]
                                                         }, order._id, true, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 534,
+                                                            lineNumber: 550,
                                                             columnNumber: 25
                                                         }, ("TURBOPACK compile-time value", void 0))) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
                                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -970,40 +982,40 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "No recent orders found"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 559,
+                                                            lineNumber: 575,
                                                             columnNumber: 25
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/page.js",
-                                                        lineNumber: 558,
+                                                        lineNumber: 574,
                                                         columnNumber: 23
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/page.js",
-                                                    lineNumber: 531,
+                                                    lineNumber: 547,
                                                     columnNumber: 19
                                                 }, ("TURBOPACK compile-time value", void 0))
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/page.js",
-                                            lineNumber: 521,
+                                            lineNumber: 537,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0))
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/page.js",
-                                        lineNumber: 520,
+                                        lineNumber: 536,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/page.js",
-                                lineNumber: 516,
+                                lineNumber: 532,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/page.js",
-                        lineNumber: 463,
+                        lineNumber: 479,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     activeTab === 'users' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1017,7 +1029,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                         children: "User Management"
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/page.js",
-                                        lineNumber: 575,
+                                        lineNumber: 591,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1030,7 +1042,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                         className: "absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/page.js",
-                                                        lineNumber: 578,
+                                                        lineNumber: 594,
                                                         columnNumber: 19
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1041,13 +1053,13 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                         className: "pl-10 pr-4 py-2 border border-vibe-cookie rounded-md focus:outline-none focus:ring-2 focus:ring-vibe-cookie"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/page.js",
-                                                        lineNumber: 579,
+                                                        lineNumber: 595,
                                                         columnNumber: 19
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/admin/page.js",
-                                                lineNumber: 577,
+                                                lineNumber: 593,
                                                 columnNumber: 17
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -1060,7 +1072,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                         children: "All Status"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/page.js",
-                                                        lineNumber: 592,
+                                                        lineNumber: 608,
                                                         columnNumber: 19
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1068,7 +1080,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                         children: "Active"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/page.js",
-                                                        lineNumber: 593,
+                                                        lineNumber: 609,
                                                         columnNumber: 19
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1076,25 +1088,25 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                         children: "Inactive"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/page.js",
-                                                        lineNumber: 594,
+                                                        lineNumber: 610,
                                                         columnNumber: 19
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/admin/page.js",
-                                                lineNumber: 587,
+                                                lineNumber: 603,
                                                 columnNumber: 17
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/admin/page.js",
-                                        lineNumber: 576,
+                                        lineNumber: 592,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/page.js",
-                                lineNumber: 574,
+                                lineNumber: 590,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1113,7 +1125,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "Name"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 604,
+                                                            lineNumber: 620,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1121,7 +1133,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "Email"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 605,
+                                                            lineNumber: 621,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1129,7 +1141,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "Phone"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 606,
+                                                            lineNumber: 622,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1137,7 +1149,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "Status"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 607,
+                                                            lineNumber: 623,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1145,18 +1157,18 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "Actions"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 608,
+                                                            lineNumber: 624,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/page.js",
-                                                    lineNumber: 603,
+                                                    lineNumber: 619,
                                                     columnNumber: 21
                                                 }, ("TURBOPACK compile-time value", void 0))
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/page.js",
-                                                lineNumber: 602,
+                                                lineNumber: 618,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
@@ -1172,7 +1184,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 614,
+                                                                lineNumber: 630,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -1180,7 +1192,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                 children: user.email
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 617,
+                                                                lineNumber: 633,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -1188,7 +1200,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                 children: user.phone || '-'
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 618,
+                                                                lineNumber: 634,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -1198,12 +1210,12 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                     children: user.isActive ? 'Active' : 'Inactive'
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/page.js",
-                                                                    lineNumber: 620,
+                                                                    lineNumber: 636,
                                                                     columnNumber: 27
                                                                 }, ("TURBOPACK compile-time value", void 0))
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 619,
+                                                                lineNumber: 635,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -1215,7 +1227,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                         children: user.isActive ? 'Deactivate' : 'Activate'
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/page.js",
-                                                                        lineNumber: 627,
+                                                                        lineNumber: 643,
                                                                         columnNumber: 27
                                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1224,46 +1236,46 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                         children: "Delete"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/page.js",
-                                                                        lineNumber: 637,
+                                                                        lineNumber: 653,
                                                                         columnNumber: 27
                                                                     }, ("TURBOPACK compile-time value", void 0))
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 626,
+                                                                lineNumber: 642,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         ]
                                                     }, user._id, true, {
                                                         fileName: "[project]/app/admin/page.js",
-                                                        lineNumber: 613,
+                                                        lineNumber: 629,
                                                         columnNumber: 23
                                                     }, ("TURBOPACK compile-time value", void 0)))
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/page.js",
-                                                lineNumber: 611,
+                                                lineNumber: 627,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/admin/page.js",
-                                        lineNumber: 601,
+                                        lineNumber: 617,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/page.js",
-                                    lineNumber: 600,
+                                    lineNumber: 616,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/page.js",
-                                lineNumber: 599,
+                                lineNumber: 615,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/page.js",
-                        lineNumber: 573,
+                        lineNumber: 589,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     activeTab === 'products' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1277,7 +1289,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                         children: "Product Management"
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/page.js",
-                                        lineNumber: 657,
+                                        lineNumber: 673,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1288,26 +1300,26 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                 className: "h-5 w-5"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/page.js",
-                                                lineNumber: 659,
+                                                lineNumber: 675,
                                                 columnNumber: 17
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 children: "Add Product"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/page.js",
-                                                lineNumber: 660,
+                                                lineNumber: 676,
                                                 columnNumber: 17
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/admin/page.js",
-                                        lineNumber: 658,
+                                        lineNumber: 674,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/page.js",
-                                lineNumber: 656,
+                                lineNumber: 672,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1320,7 +1332,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                 className: "absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/page.js",
-                                                lineNumber: 665,
+                                                lineNumber: 681,
                                                 columnNumber: 17
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1331,13 +1343,13 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                 className: "w-full pl-10 pr-4 py-2 border border-vibe-cookie rounded-md focus:outline-none focus:ring-2 focus:ring-vibe-cookie"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/page.js",
-                                                lineNumber: 666,
+                                                lineNumber: 682,
                                                 columnNumber: 17
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/admin/page.js",
-                                        lineNumber: 664,
+                                        lineNumber: 680,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -1350,7 +1362,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                 children: "All Products"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/page.js",
-                                                lineNumber: 669,
+                                                lineNumber: 685,
                                                 columnNumber: 17
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1358,7 +1370,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                 children: "In Stock"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/page.js",
-                                                lineNumber: 670,
+                                                lineNumber: 686,
                                                 columnNumber: 17
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1366,19 +1378,19 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                 children: "Out of Stock"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/page.js",
-                                                lineNumber: 671,
+                                                lineNumber: 687,
                                                 columnNumber: 17
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/admin/page.js",
-                                        lineNumber: 668,
+                                        lineNumber: 684,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/page.js",
-                                lineNumber: 663,
+                                lineNumber: 679,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1397,7 +1409,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "Product"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 679,
+                                                            lineNumber: 695,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1405,7 +1417,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "Category"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 680,
+                                                            lineNumber: 696,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1413,7 +1425,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "Price Range"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 681,
+                                                            lineNumber: 697,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1421,7 +1433,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "Stock"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 682,
+                                                            lineNumber: 698,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1429,18 +1441,18 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "Actions"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 683,
+                                                            lineNumber: 699,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/page.js",
-                                                    lineNumber: 678,
+                                                    lineNumber: 694,
                                                     columnNumber: 21
                                                 }, ("TURBOPACK compile-time value", void 0))
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/page.js",
-                                                lineNumber: 677,
+                                                lineNumber: 693,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
@@ -1464,12 +1476,12 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                                 alt: product.name
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/admin/page.js",
-                                                                                lineNumber: 696,
+                                                                                lineNumber: 712,
                                                                                 columnNumber: 33
                                                                             }, ("TURBOPACK compile-time value", void 0))
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/page.js",
-                                                                            lineNumber: 695,
+                                                                            lineNumber: 711,
                                                                             columnNumber: 31
                                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1480,7 +1492,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                                     children: product.name
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/app/admin/page.js",
-                                                                                    lineNumber: 699,
+                                                                                    lineNumber: 715,
                                                                                     columnNumber: 33
                                                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1491,24 +1503,24 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/app/admin/page.js",
-                                                                                    lineNumber: 700,
+                                                                                    lineNumber: 716,
                                                                                     columnNumber: 33
                                                                                 }, ("TURBOPACK compile-time value", void 0))
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/app/admin/page.js",
-                                                                            lineNumber: 698,
+                                                                            lineNumber: 714,
                                                                             columnNumber: 31
                                                                         }, ("TURBOPACK compile-time value", void 0))
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/app/admin/page.js",
-                                                                    lineNumber: 694,
+                                                                    lineNumber: 710,
                                                                     columnNumber: 29
                                                                 }, ("TURBOPACK compile-time value", void 0))
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 693,
+                                                                lineNumber: 709,
                                                                 columnNumber: 27
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -1516,7 +1528,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                 children: product.category
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 704,
+                                                                lineNumber: 720,
                                                                 columnNumber: 27
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -1528,7 +1540,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 705,
+                                                                lineNumber: 721,
                                                                 columnNumber: 27
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -1538,12 +1550,12 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                     children: stock > 0 ? `${stock} in stock` : 'Out of stock'
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/page.js",
-                                                                    lineNumber: 707,
+                                                                    lineNumber: 723,
                                                                     columnNumber: 29
                                                                 }, ("TURBOPACK compile-time value", void 0))
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 706,
+                                                                lineNumber: 722,
                                                                 columnNumber: 27
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -1555,7 +1567,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                         children: "Edit"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/page.js",
-                                                                        lineNumber: 712,
+                                                                        lineNumber: 728,
                                                                         columnNumber: 29
                                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1564,47 +1576,47 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                         children: "Delete"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/page.js",
-                                                                        lineNumber: 713,
+                                                                        lineNumber: 729,
                                                                         columnNumber: 29
                                                                     }, ("TURBOPACK compile-time value", void 0))
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 711,
+                                                                lineNumber: 727,
                                                                 columnNumber: 27
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         ]
                                                     }, product._id, true, {
                                                         fileName: "[project]/app/admin/page.js",
-                                                        lineNumber: 692,
+                                                        lineNumber: 708,
                                                         columnNumber: 25
                                                     }, ("TURBOPACK compile-time value", void 0));
                                                 })
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/page.js",
-                                                lineNumber: 686,
+                                                lineNumber: 702,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/admin/page.js",
-                                        lineNumber: 676,
+                                        lineNumber: 692,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/page.js",
-                                    lineNumber: 675,
+                                    lineNumber: 691,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/page.js",
-                                lineNumber: 674,
+                                lineNumber: 690,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/page.js",
-                        lineNumber: 655,
+                        lineNumber: 671,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     activeTab === 'orders' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1617,12 +1629,12 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                     children: "Order Management"
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/page.js",
-                                    lineNumber: 728,
+                                    lineNumber: 744,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/page.js",
-                                lineNumber: 727,
+                                lineNumber: 743,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1635,7 +1647,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                 className: "absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/page.js",
-                                                lineNumber: 733,
+                                                lineNumber: 749,
                                                 columnNumber: 17
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1646,13 +1658,13 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                 className: "w-full pl-10 pr-4 py-2 border border-vibe-cookie rounded-md focus:outline-none focus:ring-2 focus:ring-vibe-cookie"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/page.js",
-                                                lineNumber: 734,
+                                                lineNumber: 750,
                                                 columnNumber: 17
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/admin/page.js",
-                                        lineNumber: 732,
+                                        lineNumber: 748,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -1665,7 +1677,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                 children: "All Orders"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/page.js",
-                                                lineNumber: 747,
+                                                lineNumber: 763,
                                                 columnNumber: 17
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1673,7 +1685,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                 children: "Pending"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/page.js",
-                                                lineNumber: 748,
+                                                lineNumber: 764,
                                                 columnNumber: 17
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1681,7 +1693,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                 children: "Processing"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/page.js",
-                                                lineNumber: 749,
+                                                lineNumber: 765,
                                                 columnNumber: 17
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1689,7 +1701,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                 children: "Shipped"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/page.js",
-                                                lineNumber: 750,
+                                                lineNumber: 766,
                                                 columnNumber: 17
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1697,7 +1709,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                 children: "Delivered"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/page.js",
-                                                lineNumber: 751,
+                                                lineNumber: 767,
                                                 columnNumber: 17
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1705,19 +1717,19 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                 children: "Cancelled"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/page.js",
-                                                lineNumber: 752,
+                                                lineNumber: 768,
                                                 columnNumber: 17
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/admin/page.js",
-                                        lineNumber: 742,
+                                        lineNumber: 758,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/page.js",
-                                lineNumber: 731,
+                                lineNumber: 747,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1736,7 +1748,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "Order ID"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 761,
+                                                            lineNumber: 777,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1744,7 +1756,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "Customer"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 762,
+                                                            lineNumber: 778,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1752,7 +1764,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "Amount"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 763,
+                                                            lineNumber: 779,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1760,7 +1772,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "Status"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 764,
+                                                            lineNumber: 780,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1768,7 +1780,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "Date"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 765,
+                                                            lineNumber: 781,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1776,18 +1788,18 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "Actions"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 766,
+                                                            lineNumber: 782,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/page.js",
-                                                    lineNumber: 760,
+                                                    lineNumber: 776,
                                                     columnNumber: 21
                                                 }, ("TURBOPACK compile-time value", void 0))
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/page.js",
-                                                lineNumber: 759,
+                                                lineNumber: 775,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
@@ -1799,7 +1811,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                 children: order.orderNumber || order._id
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 772,
+                                                                lineNumber: 788,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -1811,7 +1823,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 773,
+                                                                lineNumber: 789,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -1822,7 +1834,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 776,
+                                                                lineNumber: 792,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -1834,17 +1846,17 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                         children: order.orderStatus
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/page.js",
-                                                                        lineNumber: 779,
+                                                                        lineNumber: 795,
                                                                         columnNumber: 29
                                                                     }, ("TURBOPACK compile-time value", void 0))
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/page.js",
-                                                                    lineNumber: 778,
+                                                                    lineNumber: 794,
                                                                     columnNumber: 27
                                                                 }, ("TURBOPACK compile-time value", void 0))
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 777,
+                                                                lineNumber: 793,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -1852,7 +1864,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                 children: new Date(order.createdAt).toLocaleDateString()
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 791,
+                                                                lineNumber: 807,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -1874,7 +1886,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                                                 children: "Pending"
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/app/admin/page.js",
-                                                                                                lineNumber: 805,
+                                                                                                lineNumber: 821,
                                                                                                 columnNumber: 39
                                                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1882,7 +1894,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                                                 children: "Processing"
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/app/admin/page.js",
-                                                                                                lineNumber: 806,
+                                                                                                lineNumber: 822,
                                                                                                 columnNumber: 39
                                                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1890,7 +1902,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                                                 children: "Cancelled"
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/app/admin/page.js",
-                                                                                                lineNumber: 807,
+                                                                                                lineNumber: 823,
                                                                                                 columnNumber: 39
                                                                                             }, ("TURBOPACK compile-time value", void 0))
                                                                                         ]
@@ -1902,7 +1914,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                                                 children: "Processing"
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/app/admin/page.js",
-                                                                                                lineNumber: 812,
+                                                                                                lineNumber: 828,
                                                                                                 columnNumber: 39
                                                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1910,7 +1922,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                                                 children: "Shipped"
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/app/admin/page.js",
-                                                                                                lineNumber: 813,
+                                                                                                lineNumber: 829,
                                                                                                 columnNumber: 39
                                                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1918,7 +1930,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                                                 children: "Cancelled"
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/app/admin/page.js",
-                                                                                                lineNumber: 814,
+                                                                                                lineNumber: 830,
                                                                                                 columnNumber: 39
                                                                                             }, ("TURBOPACK compile-time value", void 0))
                                                                                         ]
@@ -1930,7 +1942,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                                                 children: "Shipped"
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/app/admin/page.js",
-                                                                                                lineNumber: 819,
+                                                                                                lineNumber: 835,
                                                                                                 columnNumber: 39
                                                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1938,7 +1950,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                                                 children: "Delivered"
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/app/admin/page.js",
-                                                                                                lineNumber: 820,
+                                                                                                lineNumber: 836,
                                                                                                 columnNumber: 39
                                                                                             }, ("TURBOPACK compile-time value", void 0))
                                                                                         ]
@@ -1950,7 +1962,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                                                 children: "Delivered"
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/app/admin/page.js",
-                                                                                                lineNumber: 825,
+                                                                                                lineNumber: 841,
                                                                                                 columnNumber: 39
                                                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1958,7 +1970,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                                                 children: "Returned"
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/app/admin/page.js",
-                                                                                                lineNumber: 826,
+                                                                                                lineNumber: 842,
                                                                                                 columnNumber: 39
                                                                                             }, ("TURBOPACK compile-time value", void 0))
                                                                                         ]
@@ -1968,7 +1980,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                                         children: "Cancelled"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/admin/page.js",
-                                                                                        lineNumber: 830,
+                                                                                        lineNumber: 846,
                                                                                         columnNumber: 37
                                                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                                                     order.orderStatus === 'returned' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1976,13 +1988,13 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                                         children: "Returned"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/admin/page.js",
-                                                                                        lineNumber: 833,
+                                                                                        lineNumber: 849,
                                                                                         columnNumber: 37
                                                                                     }, ("TURBOPACK compile-time value", void 0))
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/app/admin/page.js",
-                                                                                lineNumber: 798,
+                                                                                lineNumber: 814,
                                                                                 columnNumber: 31
                                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1991,56 +2003,56 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                                 children: "Track"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/admin/page.js",
-                                                                                lineNumber: 837,
+                                                                                lineNumber: 853,
                                                                                 columnNumber: 31
                                                                             }, ("TURBOPACK compile-time value", void 0))
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/admin/page.js",
-                                                                        lineNumber: 796,
+                                                                        lineNumber: 812,
                                                                         columnNumber: 29
                                                                     }, ("TURBOPACK compile-time value", void 0))
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/page.js",
-                                                                    lineNumber: 795,
+                                                                    lineNumber: 811,
                                                                     columnNumber: 27
                                                                 }, ("TURBOPACK compile-time value", void 0))
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 794,
+                                                                lineNumber: 810,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         ]
                                                     }, order._id, true, {
                                                         fileName: "[project]/app/admin/page.js",
-                                                        lineNumber: 771,
+                                                        lineNumber: 787,
                                                         columnNumber: 23
                                                     }, ("TURBOPACK compile-time value", void 0)))
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/page.js",
-                                                lineNumber: 769,
+                                                lineNumber: 785,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/admin/page.js",
-                                        lineNumber: 758,
+                                        lineNumber: 774,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/page.js",
-                                    lineNumber: 757,
+                                    lineNumber: 773,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/page.js",
-                                lineNumber: 756,
+                                lineNumber: 772,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/page.js",
-                        lineNumber: 726,
+                        lineNumber: 742,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     activeTab === 'coupons' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2054,7 +2066,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                         children: "Coupon Management"
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/page.js",
-                                        lineNumber: 861,
+                                        lineNumber: 877,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
@@ -2065,26 +2077,26 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                 className: "h-5 w-5"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/page.js",
-                                                lineNumber: 863,
+                                                lineNumber: 879,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 children: "Add Coupon"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/page.js",
-                                                lineNumber: 864,
+                                                lineNumber: 880,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/admin/page.js",
-                                        lineNumber: 862,
+                                        lineNumber: 878,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/page.js",
-                                lineNumber: 860,
+                                lineNumber: 876,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2099,7 +2111,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                             children: "All Coupons"
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/page.js",
-                                            lineNumber: 874,
+                                            lineNumber: 890,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2107,7 +2119,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                             children: "Active"
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/page.js",
-                                            lineNumber: 875,
+                                            lineNumber: 891,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2115,18 +2127,18 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                             children: "Inactive"
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/page.js",
-                                            lineNumber: 876,
+                                            lineNumber: 892,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0))
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/admin/page.js",
-                                    lineNumber: 869,
+                                    lineNumber: 885,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/page.js",
-                                lineNumber: 868,
+                                lineNumber: 884,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2145,7 +2157,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "Code"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 885,
+                                                            lineNumber: 901,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -2153,7 +2165,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "Discount"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 886,
+                                                            lineNumber: 902,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -2161,7 +2173,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "Min Amount"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 887,
+                                                            lineNumber: 903,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -2169,7 +2181,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "Usage"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 888,
+                                                            lineNumber: 904,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -2177,7 +2189,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "Status"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 889,
+                                                            lineNumber: 905,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -2185,18 +2197,18 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "Actions"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 890,
+                                                            lineNumber: 906,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/page.js",
-                                                    lineNumber: 884,
+                                                    lineNumber: 900,
                                                     columnNumber: 21
                                                 }, ("TURBOPACK compile-time value", void 0))
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/page.js",
-                                                lineNumber: 883,
+                                                lineNumber: 899,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
@@ -2208,7 +2220,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                 children: coupon.code
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 896,
+                                                                lineNumber: 912,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -2216,7 +2228,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                 children: coupon.type === 'percentage' ? `${coupon.discount}%` : `₹${coupon.discount}`
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 897,
+                                                                lineNumber: 913,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -2227,7 +2239,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 900,
+                                                                lineNumber: 916,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -2239,7 +2251,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 901,
+                                                                lineNumber: 917,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -2249,12 +2261,12 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                     children: coupon.isActive ? 'Active' : 'Inactive'
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/page.js",
-                                                                    lineNumber: 905,
+                                                                    lineNumber: 921,
                                                                     columnNumber: 27
                                                                 }, ("TURBOPACK compile-time value", void 0))
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 904,
+                                                                lineNumber: 920,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -2266,7 +2278,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                         children: "Edit"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/page.js",
-                                                                        lineNumber: 912,
+                                                                        lineNumber: 928,
                                                                         columnNumber: 27
                                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2275,46 +2287,46 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                         children: "Delete"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/page.js",
-                                                                        lineNumber: 918,
+                                                                        lineNumber: 934,
                                                                         columnNumber: 27
                                                                     }, ("TURBOPACK compile-time value", void 0))
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 911,
+                                                                lineNumber: 927,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         ]
                                                     }, coupon._id, true, {
                                                         fileName: "[project]/app/admin/page.js",
-                                                        lineNumber: 895,
+                                                        lineNumber: 911,
                                                         columnNumber: 23
                                                     }, ("TURBOPACK compile-time value", void 0)))
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/page.js",
-                                                lineNumber: 893,
+                                                lineNumber: 909,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/admin/page.js",
-                                        lineNumber: 882,
+                                        lineNumber: 898,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/page.js",
-                                    lineNumber: 881,
+                                    lineNumber: 897,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/page.js",
-                                lineNumber: 880,
+                                lineNumber: 896,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/page.js",
-                        lineNumber: 859,
+                        lineNumber: 875,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     activeTab === 'reviews' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2327,12 +2339,12 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                     children: "Review Management"
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/page.js",
-                                    lineNumber: 938,
+                                    lineNumber: 954,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/page.js",
-                                lineNumber: 937,
+                                lineNumber: 953,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2347,7 +2359,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                             children: "All Reviews"
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/page.js",
-                                            lineNumber: 947,
+                                            lineNumber: 963,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2355,7 +2367,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                             children: "Active"
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/page.js",
-                                            lineNumber: 948,
+                                            lineNumber: 964,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2363,18 +2375,18 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                             children: "Inactive"
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/page.js",
-                                            lineNumber: 949,
+                                            lineNumber: 965,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0))
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/admin/page.js",
-                                    lineNumber: 942,
+                                    lineNumber: 958,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/page.js",
-                                lineNumber: 941,
+                                lineNumber: 957,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2393,7 +2405,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "Customer"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 958,
+                                                            lineNumber: 974,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -2401,7 +2413,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "Product"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 959,
+                                                            lineNumber: 975,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -2409,7 +2421,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "Order"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 960,
+                                                            lineNumber: 976,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -2417,7 +2429,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "Rating"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 961,
+                                                            lineNumber: 977,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -2425,7 +2437,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "Title"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 962,
+                                                            lineNumber: 978,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -2433,7 +2445,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "Status"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 963,
+                                                            lineNumber: 979,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -2441,7 +2453,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "Date"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 964,
+                                                            lineNumber: 980,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -2449,18 +2461,18 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                             children: "Actions"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/page.js",
-                                                            lineNumber: 965,
+                                                            lineNumber: 981,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/page.js",
-                                                    lineNumber: 957,
+                                                    lineNumber: 973,
                                                     columnNumber: 21
                                                 }, ("TURBOPACK compile-time value", void 0))
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/page.js",
-                                                lineNumber: 956,
+                                                lineNumber: 972,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
@@ -2475,7 +2487,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                             children: review.userName
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/page.js",
-                                                                            lineNumber: 973,
+                                                                            lineNumber: 989,
                                                                             columnNumber: 29
                                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2483,18 +2495,18 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                             children: review.userEmail
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/page.js",
-                                                                            lineNumber: 974,
+                                                                            lineNumber: 990,
                                                                             columnNumber: 29
                                                                         }, ("TURBOPACK compile-time value", void 0))
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/app/admin/page.js",
-                                                                    lineNumber: 972,
+                                                                    lineNumber: 988,
                                                                     columnNumber: 27
                                                                 }, ("TURBOPACK compile-time value", void 0))
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 971,
+                                                                lineNumber: 987,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -2508,25 +2520,25 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                             className: "w-8 h-8 rounded object-cover"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/page.js",
-                                                                            lineNumber: 980,
+                                                                            lineNumber: 996,
                                                                             columnNumber: 31
                                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                             children: review.productName
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/page.js",
-                                                                            lineNumber: 986,
+                                                                            lineNumber: 1002,
                                                                             columnNumber: 29
                                                                         }, ("TURBOPACK compile-time value", void 0))
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/app/admin/page.js",
-                                                                    lineNumber: 978,
+                                                                    lineNumber: 994,
                                                                     columnNumber: 27
                                                                 }, ("TURBOPACK compile-time value", void 0))
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 977,
+                                                                lineNumber: 993,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -2534,7 +2546,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                 children: review.orderNumber
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 989,
+                                                                lineNumber: 1005,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -2549,7 +2561,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                                 children: "★"
                                                                             }, i, false, {
                                                                                 fileName: "[project]/app/admin/page.js",
-                                                                                lineNumber: 995,
+                                                                                lineNumber: 1011,
                                                                                 columnNumber: 31
                                                                             }, ("TURBOPACK compile-time value", void 0))),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2561,18 +2573,18 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/app/admin/page.js",
-                                                                            lineNumber: 1004,
+                                                                            lineNumber: 1020,
                                                                             columnNumber: 29
                                                                         }, ("TURBOPACK compile-time value", void 0))
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/app/admin/page.js",
-                                                                    lineNumber: 993,
+                                                                    lineNumber: 1009,
                                                                     columnNumber: 27
                                                                 }, ("TURBOPACK compile-time value", void 0))
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 992,
+                                                                lineNumber: 1008,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -2580,7 +2592,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                 children: review.title
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 1007,
+                                                                lineNumber: 1023,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -2590,12 +2602,12 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                     children: review.isActive ? 'Active' : 'Inactive'
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/page.js",
-                                                                    lineNumber: 1011,
+                                                                    lineNumber: 1027,
                                                                     columnNumber: 27
                                                                 }, ("TURBOPACK compile-time value", void 0))
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 1010,
+                                                                lineNumber: 1026,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -2603,7 +2615,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                 children: new Date(review.date).toLocaleDateString()
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 1017,
+                                                                lineNumber: 1033,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -2615,7 +2627,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                         children: review.isActive ? 'Deactivate' : 'Activate'
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/page.js",
-                                                                        lineNumber: 1021,
+                                                                        lineNumber: 1037,
                                                                         columnNumber: 27
                                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2624,46 +2636,46 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                                                         children: "View"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/page.js",
-                                                                        lineNumber: 1031,
+                                                                        lineNumber: 1047,
                                                                         columnNumber: 27
                                                                     }, ("TURBOPACK compile-time value", void 0))
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/admin/page.js",
-                                                                lineNumber: 1020,
+                                                                lineNumber: 1036,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         ]
                                                     }, review.id, true, {
                                                         fileName: "[project]/app/admin/page.js",
-                                                        lineNumber: 970,
+                                                        lineNumber: 986,
                                                         columnNumber: 23
                                                     }, ("TURBOPACK compile-time value", void 0)))
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/page.js",
-                                                lineNumber: 968,
+                                                lineNumber: 984,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/admin/page.js",
-                                        lineNumber: 955,
+                                        lineNumber: 971,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/page.js",
-                                    lineNumber: 954,
+                                    lineNumber: 970,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/page.js",
-                                lineNumber: 953,
+                                lineNumber: 969,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/page.js",
-                        lineNumber: 936,
+                        lineNumber: 952,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     totalPages > 1 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2678,7 +2690,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                     children: "Previous"
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/page.js",
-                                    lineNumber: 1051,
+                                    lineNumber: 1067,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 Array.from({
@@ -2691,7 +2703,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                         children: page
                                     }, page, false, {
                                         fileName: "[project]/app/admin/page.js",
-                                        lineNumber: 1062,
+                                        lineNumber: 1078,
                                         columnNumber: 19
                                     }, ("TURBOPACK compile-time value", void 0));
                                 }),
@@ -2702,30 +2714,30 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                                     children: "Next"
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/page.js",
-                                    lineNumber: 1076,
+                                    lineNumber: 1092,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/admin/page.js",
-                            lineNumber: 1050,
+                            lineNumber: 1066,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0))
                     }, void 0, false, {
                         fileName: "[project]/app/admin/page.js",
-                        lineNumber: 1049,
+                        lineNumber: 1065,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/admin/page.js",
-                lineNumber: 414,
+                lineNumber: 430,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0))
         ]
     }, void 0, true, {
         fileName: "[project]/app/admin/page.js",
-        lineNumber: 383,
+        lineNumber: 399,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };

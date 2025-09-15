@@ -11,52 +11,52 @@ const CategorySection = () => {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(null);
 
-  // Fallback categories in case API fails
-  const fallbackCategories = [
-    {
-      _id: '1',
-      name: 'Healthy Snacks',
-      description: 'Nutritious and delicious snacks for a healthy lifestyle',
-      image: '/images/hero-snack-1.jpg'
-    },
-    {
-      _id: '2', 
-      name: 'Protein Bars',
-      description: 'High protein bars for energy and muscle recovery',
-      image: '/images/hero-snack-2.jpg'
-    },
-    {
-      _id: '3',
-      name: 'Trail Mix',
-      description: 'Perfect blend of nuts, dried fruits and seeds',
-      image: '/images/hero-snack-3.jpg'
-    },
-    {
-      _id: '4',
-      name: 'Energy Bites',
-      description: 'Quick energy bites made with natural ingredients',
-      image: '/images/hero-snack-1.jpg'
-    },
-    {
-      _id: '5',
-      name: 'Granola',
-      description: 'Crunchy granola with oats, nuts and honey',
-      image: '/images/hero-snack-2.jpg'
-    },
-    {
-      _id: '6',
-      name: 'Dried Fruits',
-      description: 'Natural dried fruits without added sugar',
-      image: '/images/hero-snack-3.jpg'
-    }
-  ];
-
   React.useEffect(() => {
+    // Fallback categories in case API fails
+    const fallbackCategories = [
+      {
+        _id: '1',
+        name: 'Healthy Snacks',
+        description: 'Nutritious and delicious snacks for a healthy lifestyle',
+        image: '/images/hero-snack-1.jpg'
+      },
+      {
+        _id: '2', 
+        name: 'Protein Bars',
+        description: 'High protein bars for energy and muscle recovery',
+        image: '/images/hero-snack-2.jpg'
+      },
+      {
+        _id: '3',
+        name: 'Trail Mix',
+        description: 'Perfect blend of nuts, dried fruits and seeds',
+        image: '/images/hero-snack-3.jpg'
+      },
+      {
+        _id: '4',
+        name: 'Energy Bites',
+        description: 'Quick energy bites made with natural ingredients',
+        image: '/images/hero-snack-1.jpg'
+      },
+      {
+        _id: '5',
+        name: 'Granola',
+        description: 'Crunchy granola with oats, nuts and honey',
+        image: '/images/hero-snack-2.jpg'
+      },
+      {
+        _id: '6',
+        name: 'Dried Fruits',
+        description: 'Natural dried fruits without added sugar',
+        image: '/images/hero-snack-3.jpg'
+      }
+    ];
+
     async function fetchCategories() {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch('http://localhost:8080/api/categories');
+        const res = await fetch('http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/categories');
         if (!res.ok) throw new Error('Failed to fetch categories');
         const data = await res.json();
         const apiCategories = data.data.categories || [];

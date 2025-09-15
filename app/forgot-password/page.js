@@ -24,7 +24,7 @@ const ForgotPasswordPage = () => {
     setIsLoading(true)
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/auth/forgot-password`, {
+      const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/auth/forgot-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -55,7 +55,7 @@ const ForgotPasswordPage = () => {
           <Mail className="h-16 w-16 text-vibe-cookie mx-auto mb-6" />
           <h1 className="text-2xl font-bold text-vibe-brown mb-4">Check Your Email</h1>
           <p className="text-vibe-brown/70 mb-6">
-            We've sent a password reset link to <strong>{email}</strong>. 
+            We&apos;ve sent a password reset link to <strong>{email}</strong>. 
             Please check your email and follow the instructions to reset your password.
           </p>
           <p className="text-sm text-vibe-brown/60 mb-6">
@@ -93,7 +93,7 @@ const ForgotPasswordPage = () => {
           </Link>
           <h1 className="text-2xl font-bold text-vibe-brown mb-2">Forgot Password?</h1>
           <p className="text-vibe-brown/70">
-            No worries! Enter your email address and we'll send you a link to reset your password.
+            No worries! Enter your email address and we&apos;ll send you a link to reset your password.
           </p>
         </div>
 

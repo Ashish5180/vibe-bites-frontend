@@ -46,7 +46,7 @@ const WhyChooseUs = () => {
             Why Choose VIBE BITES?
           </h2>
           <p className="text-lg text-vibe-brown/70 max-w-2xl mx-auto">
-            We're committed to bringing you the healthiest and tastiest snacks that nourish your body and soul
+            We&apos;re committed to bringing you the healthiest and tastiest snacks that nourish your body and soul
           </p>
         </div>
 
@@ -117,7 +117,7 @@ const WhyChooseUs = () => {
             <p className="text-lg text-vibe-brown/70 leading-relaxed">
               At VIBE BITES, we believe that healthy snacking should never compromise on taste. 
               Our mission is to create delicious, nutritious snacks that bring joy to every bite 
-              while supporting your health and wellness journey. We're committed to using only 
+              while supporting your health and wellness journey. We&apos;re committed to using only 
               the finest natural ingredients and innovative recipes that make healthy eating 
               an enjoyable experience for everyone.
             </p>

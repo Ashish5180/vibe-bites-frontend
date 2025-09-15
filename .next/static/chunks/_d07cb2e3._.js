@@ -55,7 +55,7 @@ const Navbar = ()=>{
         const token = localStorage.getItem('token');
         if (token) {
             // Check if user is admin and redirect accordingly
-            fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api', "/auth/me"), {
+            fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api', "/auth/me"), {
                 headers: {
                     'Authorization': "Bearer ".concat(token)
                 }
@@ -1147,14 +1147,14 @@ function EditCouponPage() {
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "EditCouponPage.useEffect": ()=>{
             // Fetch categories
-            fetch("http://localhost:8080/api/products/categories").then({
+            fetch("http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/products/categories").then({
                 "EditCouponPage.useEffect": (res)=>res.json()
             }["EditCouponPage.useEffect"]).then({
                 "EditCouponPage.useEffect": (data)=>setCategories(data.data.categories || [])
             }["EditCouponPage.useEffect"]);
             // Fetch coupon details
             if (couponId) {
-                fetch("http://localhost:8080/api/admin/coupons/".concat(couponId), {
+                fetch("http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/admin/coupons/".concat(couponId), {
                     credentials: "include"
                 }).then({
                     "EditCouponPage.useEffect": (res)=>res.json()
@@ -1237,7 +1237,7 @@ function EditCouponPage() {
                 validUntil: form.validUntil,
                 isActive: form.isActive
             };
-            const res = await fetch("http://localhost:8080/api/coupons/".concat(couponId), {
+            const res = await fetch("http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/coupons/".concat(couponId), {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"

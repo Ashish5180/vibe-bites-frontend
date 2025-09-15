@@ -8,6 +8,15 @@ const RazorpayPayment = ({ amount, orderId, onSuccess, onError, userInfo }) => {
   const [razorpayLoaded, setRazorpayLoaded] = useState(false)
   const { addToast } = useToast()
 
+  // Helper function to get auth headers
+  const getAuthHeaders = () => {
+    const token = localStorage.getItem('token')
+    return {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  }
+
   useEffect(() => {
     // Load Razorpay script
     const script = document.createElement('script')
@@ -30,10 +39,11 @@ const RazorpayPayment = ({ amount, orderId, onSuccess, onError, userInfo }) => {
     setLoading(true)
 
     try {
-      const token = localStorage.getItem('token')
       
       // Get Razorpay key
-      const keyRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/payments/razorpay/keys`)
+      const keyRes = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/payments/razorpay/keys`, {
+        headers: getAuthHeaders()
+      })
       const keyData = await keyRes.json()
       
       if (!keyRes.ok || !keyData.success) {
@@ -41,12 +51,12 @@ const RazorpayPayment = ({ amount, orderId, onSuccess, onError, userInfo }) => {
       }
 
       // Create Razorpay order
-      const orderRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/payments/razorpay/create-order`, {
+      const orderRes = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/payments/razorpay/create-order`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Content-Type': 'application/json'
         },
+        headers: getAuthHeaders(),
         body: JSON.stringify({
           amount: amount,
           currency: 'INR',
@@ -79,12 +89,12 @@ const RazorpayPayment = ({ amount, orderId, onSuccess, onError, userInfo }) => {
         handler: async function (response) {
           try {
             // Verify payment
-            const verifyRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/payments/razorpay/verify`, {
+            const verifyRes = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/payments/razorpay/verify`, {
               method: 'POST',
               headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-              },
+          'Content-Type': 'application/json'
+        },
+        headers: getAuthHeaders(),
               body: JSON.stringify({
                 orderId: response.razorpay_order_id,
                 paymentId: response.razorpay_payment_id,

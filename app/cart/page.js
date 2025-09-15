@@ -20,7 +20,7 @@ const CartPage = () => {
   React.useEffect(() => {
     const fetchCoupons = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/coupons`)
+        const res = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/coupons`)
         const data = await res.json()
         if (res.ok && data.success && data.data && data.data.coupons) {
           setAvailableCoupons(data.data.coupons)
@@ -58,7 +58,7 @@ const CartPage = () => {
             <ShoppingBag className="h-20 w-20 sm:h-24 sm:w-24 text-vibe-brown/40 mx-auto mb-6" />
             <h1 className="text-2xl sm:text-3xl font-bold text-vibe-brown mb-4">Your Cart is Empty</h1>
             <p className="text-base sm:text-lg text-vibe-brown/70 mb-8">
-              Looks like you haven't added any snacks to your cart yet.
+              Looks like you haven&apos;t added any snacks to your cart yet.
             </p>
             <Link
               href="/products"

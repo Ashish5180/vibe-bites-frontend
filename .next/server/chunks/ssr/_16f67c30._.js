@@ -52,7 +52,7 @@ const Navbar = ()=>{
             router.push('/login');
             return;
         }
-        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/auth/me`, {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/auth/me`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             },
@@ -1114,13 +1114,13 @@ const RazorpayPayment = ({ amount, orderId, onSuccess, onError, userInfo })=>{
         try {
             const token = localStorage.getItem('token');
             // Get Razorpay key
-            const keyRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/payments/razorpay/keys`);
+            const keyRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/payments/razorpay/keys`);
             const keyData = await keyRes.json();
             if (!keyRes.ok || !keyData.success) {
                 throw new Error('Failed to get payment keys');
             }
             // Create Razorpay order
-            const orderRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/payments/razorpay/create-order`, {
+            const orderRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/payments/razorpay/create-order`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -1155,7 +1155,7 @@ const RazorpayPayment = ({ amount, orderId, onSuccess, onError, userInfo })=>{
                 handler: async function(response) {
                     try {
                         // Verify payment
-                        const verifyRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/payments/razorpay/verify`, {
+                        const verifyRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/payments/razorpay/verify`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -1325,7 +1325,7 @@ const CheckoutPage = ()=>{
             paymentMethod: formData.paymentMethod,
             appliedCoupon: appliedCoupon || undefined
         };
-        const orderRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/orders`, {
+        const orderRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/orders`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

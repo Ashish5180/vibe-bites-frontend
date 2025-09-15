@@ -8,7 +8,6 @@ var { k: __turbopack_refresh__, m: module } = __turbopack_context__;
 __turbopack_context__.s({
     "default": ()=>__TURBOPACK__default__export__
 });
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = /*#__PURE__*/ __turbopack_context__.i("[project]/node_modules/next/dist/build/polyfills/process.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/navigation.js [app-client] (ecmascript)");
@@ -47,15 +46,28 @@ const AddCategoryPage = ()=>{
         description: '',
         image: ''
     });
-    const apiBase = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
+    const apiBase = 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api';
+    // Helper function to get auth headers
+    const getAuthHeaders = ()=>{
+        const token = localStorage.getItem('token');
+        return {
+            'Authorization': "Bearer ".concat(token),
+            'Content-Type': 'application/json'
+        };
+    };
     // Auth check (admin only)
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "AddCategoryPage.useEffect": ()=>{
             const checkAuth = {
                 "AddCategoryPage.useEffect.checkAuth": async ()=>{
                     try {
+                        const token = localStorage.getItem('token');
+                        if (!token) {
+                            router.push('/login');
+                            return;
+                        }
                         const res = await fetch("".concat(apiBase, "/auth/me"), {
-                            credentials: 'include'
+                            headers: getAuthHeaders()
                         });
                         if (!res.ok) throw new Error('Auth failed');
                         const data = await res.json();
@@ -88,7 +100,7 @@ const AddCategoryPage = ()=>{
     const loadCategories = async ()=>{
         try {
             const res = await fetch("".concat(apiBase, "/categories/all"), {
-                credentials: 'include'
+                headers: getAuthHeaders()
             });
             if (res.ok) {
                 const data = await res.json();
@@ -118,8 +130,9 @@ const AddCategoryPage = ()=>{
                 headers: {
                     'Content-Type': 'application/json'
                 },
+                headers: getAuthHeaders(),
                 body: JSON.stringify(payload),
-                credentials: 'include'
+                headers: getAuthHeaders()
             });
             const data = await res.json();
             if (res.ok && data.success) {
@@ -172,8 +185,9 @@ const AddCategoryPage = ()=>{
                 headers: {
                     'Content-Type': 'application/json'
                 },
+                headers: getAuthHeaders(),
                 body: JSON.stringify(payload),
-                credentials: 'include'
+                headers: getAuthHeaders()
             });
             const data = await res.json();
             if (res.ok && data.success) {
@@ -194,10 +208,11 @@ const AddCategoryPage = ()=>{
                 headers: {
                     'Content-Type': 'application/json'
                 },
+                headers: getAuthHeaders(),
                 body: JSON.stringify({
                     isActive: !cat.isActive
                 }),
-                credentials: 'include'
+                headers: getAuthHeaders()
             });
             if (res.ok) {
                 addToast('Status updated', 'success');
@@ -212,12 +227,9 @@ const AddCategoryPage = ()=>{
     const deleteCategory = async (id)=>{
         if (!confirm('Delete this category?')) return;
         try {
-            const token = localStorage.getItem('token');
             const res = await fetch("".concat(apiBase, "/categories/").concat(id), {
                 method: 'DELETE',
-                headers: {
-                    Authorization: "Bearer ".concat(token)
-                }
+                headers: getAuthHeaders()
             });
             if (res.ok) {
                 addToast('Category deleted', 'success');
@@ -235,7 +247,7 @@ const AddCategoryPage = ()=>{
             children: "Loading..."
         }, void 0, false, {
             fileName: "[project]/app/admin/addcategory/page.js",
-            lineNumber: 154,
+            lineNumber: 179,
             columnNumber: 12
         }, ("TURBOPACK compile-time value", void 0));
     }
@@ -258,17 +270,17 @@ const AddCategoryPage = ()=>{
                         children: "← Back to Dashboard"
                     }, void 0, false, {
                         fileName: "[project]/app/admin/addcategory/page.js",
-                        lineNumber: 161,
+                        lineNumber: 186,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0))
                 }, void 0, false, {
                     fileName: "[project]/app/admin/addcategory/page.js",
-                    lineNumber: 160,
+                    lineNumber: 185,
                     columnNumber: 9
                 }, ("TURBOPACK compile-time value", void 0))
             }, void 0, false, {
                 fileName: "[project]/app/admin/addcategory/page.js",
-                lineNumber: 159,
+                lineNumber: 184,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -279,7 +291,7 @@ const AddCategoryPage = ()=>{
                         children: "Category Management"
                     }, void 0, false, {
                         fileName: "[project]/app/admin/addcategory/page.js",
-                        lineNumber: 167,
+                        lineNumber: 192,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -290,7 +302,7 @@ const AddCategoryPage = ()=>{
                                 className: "h-4 w-4"
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/addcategory/page.js",
-                                lineNumber: 169,
+                                lineNumber: 194,
                                 columnNumber: 11
                             }, ("TURBOPACK compile-time value", void 0)),
                             " ",
@@ -298,19 +310,19 @@ const AddCategoryPage = ()=>{
                                 children: "Refresh"
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/addcategory/page.js",
-                                lineNumber: 169,
+                                lineNumber: 194,
                                 columnNumber: 45
                             }, ("TURBOPACK compile-time value", void 0))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/addcategory/page.js",
-                        lineNumber: 168,
+                        lineNumber: 193,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/admin/addcategory/page.js",
-                lineNumber: 166,
+                lineNumber: 191,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -324,14 +336,14 @@ const AddCategoryPage = ()=>{
                                 className: "h-5 w-5"
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/addcategory/page.js",
-                                lineNumber: 175,
+                                lineNumber: 200,
                                 columnNumber: 87
                             }, ("TURBOPACK compile-time value", void 0)),
                             " Add New Category"
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/addcategory/page.js",
-                        lineNumber: 175,
+                        lineNumber: 200,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -349,7 +361,7 @@ const AddCategoryPage = ()=>{
                                 required: true
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/addcategory/page.js",
-                                lineNumber: 177,
+                                lineNumber: 202,
                                 columnNumber: 11
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -363,7 +375,7 @@ const AddCategoryPage = ()=>{
                                 className: "px-3 py-2 border border-vibe-cookie rounded-md focus:outline-none focus:ring-2 focus:ring-vibe-cookie"
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/addcategory/page.js",
-                                lineNumber: 185,
+                                lineNumber: 210,
                                 columnNumber: 11
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -377,13 +389,13 @@ const AddCategoryPage = ()=>{
                                 className: "px-3 py-2 border border-vibe-cookie rounded-md focus:outline-none focus:ring-2 focus:ring-vibe-cookie"
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/addcategory/page.js",
-                                lineNumber: 192,
+                                lineNumber: 217,
                                 columnNumber: 11
                             }, ("TURBOPACK compile-time value", void 0))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/addcategory/page.js",
-                        lineNumber: 176,
+                        lineNumber: 201,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -393,13 +405,13 @@ const AddCategoryPage = ()=>{
                         children: creating ? 'Creating...' : 'Create Category'
                     }, void 0, false, {
                         fileName: "[project]/app/admin/addcategory/page.js",
-                        lineNumber: 200,
+                        lineNumber: 225,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/admin/addcategory/page.js",
-                lineNumber: 174,
+                lineNumber: 199,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -416,7 +428,7 @@ const AddCategoryPage = ()=>{
                                         children: "Name"
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/addcategory/page.js",
-                                        lineNumber: 210,
+                                        lineNumber: 235,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -424,7 +436,7 @@ const AddCategoryPage = ()=>{
                                         children: "Description"
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/addcategory/page.js",
-                                        lineNumber: 211,
+                                        lineNumber: 236,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -432,7 +444,7 @@ const AddCategoryPage = ()=>{
                                         children: "Status"
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/addcategory/page.js",
-                                        lineNumber: 212,
+                                        lineNumber: 237,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -440,18 +452,18 @@ const AddCategoryPage = ()=>{
                                         children: "Actions"
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/addcategory/page.js",
-                                        lineNumber: 213,
+                                        lineNumber: 238,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/addcategory/page.js",
-                                lineNumber: 209,
+                                lineNumber: 234,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0))
                         }, void 0, false, {
                             fileName: "[project]/app/admin/addcategory/page.js",
-                            lineNumber: 208,
+                            lineNumber: 233,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
@@ -471,12 +483,12 @@ const AddCategoryPage = ()=>{
                                                     className: "px-2 py-1 border border-vibe-cookie rounded"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/addcategory/page.js",
-                                                    lineNumber: 221,
+                                                    lineNumber: 246,
                                                     columnNumber: 21
                                                 }, ("TURBOPACK compile-time value", void 0)) : cat.name
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/addcategory/page.js",
-                                                lineNumber: 219,
+                                                lineNumber: 244,
                                                 columnNumber: 17
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -490,12 +502,12 @@ const AddCategoryPage = ()=>{
                                                     className: "w-full px-2 py-1 border border-vibe-cookie rounded"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/addcategory/page.js",
-                                                    lineNumber: 226,
+                                                    lineNumber: 251,
                                                     columnNumber: 21
                                                 }, ("TURBOPACK compile-time value", void 0)) : cat.description || '-'
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/addcategory/page.js",
-                                                lineNumber: 224,
+                                                lineNumber: 249,
                                                 columnNumber: 17
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -505,12 +517,12 @@ const AddCategoryPage = ()=>{
                                                     children: cat.isActive ? 'Active' : 'Inactive'
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/addcategory/page.js",
-                                                    lineNumber: 230,
+                                                    lineNumber: 255,
                                                     columnNumber: 19
                                                 }, ("TURBOPACK compile-time value", void 0))
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/addcategory/page.js",
-                                                lineNumber: 229,
+                                                lineNumber: 254,
                                                 columnNumber: 17
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -524,12 +536,12 @@ const AddCategoryPage = ()=>{
                                                                 className: "h-4 w-4"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/addcategory/page.js",
-                                                                lineNumber: 235,
+                                                                lineNumber: 260,
                                                                 columnNumber: 167
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/addcategory/page.js",
-                                                            lineNumber: 235,
+                                                            lineNumber: 260,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -539,12 +551,12 @@ const AddCategoryPage = ()=>{
                                                                 className: "h-4 w-4"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/addcategory/page.js",
-                                                                lineNumber: 236,
+                                                                lineNumber: 261,
                                                                 columnNumber: 151
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/addcategory/page.js",
-                                                            lineNumber: 236,
+                                                            lineNumber: 261,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     ]
@@ -557,12 +569,12 @@ const AddCategoryPage = ()=>{
                                                                 className: "h-4 w-4"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/addcategory/page.js",
-                                                                lineNumber: 240,
+                                                                lineNumber: 265,
                                                                 columnNumber: 161
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/addcategory/page.js",
-                                                            lineNumber: 240,
+                                                            lineNumber: 265,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -572,18 +584,18 @@ const AddCategoryPage = ()=>{
                                                                 className: "h-4 w-4"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/addcategory/page.js",
-                                                                lineNumber: 242,
+                                                                lineNumber: 267,
                                                                 columnNumber: 41
                                                             }, ("TURBOPACK compile-time value", void 0)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$toggle$2d$left$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ToggleLeft$3e$__["ToggleLeft"], {
                                                                 className: "h-4 w-4"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/addcategory/page.js",
-                                                                lineNumber: 242,
+                                                                lineNumber: 267,
                                                                 columnNumber: 79
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/addcategory/page.js",
-                                                            lineNumber: 241,
+                                                            lineNumber: 266,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -593,25 +605,25 @@ const AddCategoryPage = ()=>{
                                                                 className: "h-4 w-4"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/addcategory/page.js",
-                                                                lineNumber: 244,
+                                                                lineNumber: 269,
                                                                 columnNumber: 167
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/addcategory/page.js",
-                                                            lineNumber: 244,
+                                                            lineNumber: 269,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     ]
                                                 }, void 0, true)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/addcategory/page.js",
-                                                lineNumber: 232,
+                                                lineNumber: 257,
                                                 columnNumber: 17
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, cat._id, true, {
                                         fileName: "[project]/app/admin/addcategory/page.js",
-                                        lineNumber: 218,
+                                        lineNumber: 243,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0))),
                                 categories.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
@@ -621,29 +633,29 @@ const AddCategoryPage = ()=>{
                                         children: "No categories yet."
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/addcategory/page.js",
-                                        lineNumber: 251,
+                                        lineNumber: 276,
                                         columnNumber: 19
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/addcategory/page.js",
-                                    lineNumber: 251,
+                                    lineNumber: 276,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/admin/addcategory/page.js",
-                            lineNumber: 216,
+                            lineNumber: 241,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0))
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/admin/addcategory/page.js",
-                    lineNumber: 207,
+                    lineNumber: 232,
                     columnNumber: 9
                 }, ("TURBOPACK compile-time value", void 0))
             }, void 0, false, {
                 fileName: "[project]/app/admin/addcategory/page.js",
-                lineNumber: 206,
+                lineNumber: 231,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -651,13 +663,13 @@ const AddCategoryPage = ()=>{
                 children: "Note: Product schema still uses a fixed enum for categories; newly created categories here won't be usable for products until that enum is updated (left unchanged as requested)."
             }, void 0, false, {
                 fileName: "[project]/app/admin/addcategory/page.js",
-                lineNumber: 257,
+                lineNumber: 282,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0))
         ]
     }, void 0, true, {
         fileName: "[project]/app/admin/addcategory/page.js",
-        lineNumber: 158,
+        lineNumber: 183,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };

@@ -76,7 +76,7 @@ const Navbar = ()=>{
             router.push('/login');
             return;
         }
-        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/auth/me`, {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/auth/me`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             },
@@ -1135,7 +1135,7 @@ const ProductReviews = ({ productId, productName })=>{
             setLoading(true);
             setError(null);
             try {
-                const res = await fetch(`http://localhost:8080/api/reviews/product/${productId}`);
+                const res = await fetch(`http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/reviews/product/${productId}`);
                 if (!res.ok) throw new Error('Failed to fetch reviews');
                 const data = await res.json();
                 setReviews(data.data.reviews);
@@ -1162,7 +1162,7 @@ const ProductReviews = ({ productId, productName })=>{
                     if (parts.length === 2) return parts.pop().split(';').shift();
                 }
                 const token = getCookie('token');
-                const res = await fetch('http://localhost:8080/api/reviews', {
+                const res = await fetch('http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/reviews', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -1186,7 +1186,7 @@ const ProductReviews = ({ productId, productName })=>{
                 });
                 // Refresh reviews after submit
                 if (productId) {
-                    const reviewsRes = await fetch(`http://localhost:8080/api/reviews/product/${productId}`);
+                    const reviewsRes = await fetch(`http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/reviews/product/${productId}`);
                     if (reviewsRes.ok) {
                         const data = await reviewsRes.json();
                         setReviews(data.data.reviews);
@@ -1756,7 +1756,7 @@ function ProductDetailPage() {
             setLoading(true);
             setError(null);
             try {
-                const response = await fetch(`http://localhost:8080/api/products/${params.id}`, {
+                const response = await fetch(`http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/products/${params.id}`, {
                     headers: {
                         'Cache-Control': 'no-cache'
                     }

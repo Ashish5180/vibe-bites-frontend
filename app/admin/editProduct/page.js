@@ -16,8 +16,17 @@ const EditProductPage = () => {
   const [categories, setCategories] = useState([])
   const [product, setProduct] = useState(null)
   
-  const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'
+  const apiBase = 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'
   const productId = searchParams.get('id')
+
+  // Helper function to get auth headers
+  const getAuthHeaders = () => {
+    const token = localStorage.getItem('token')
+    return {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  }
 
   // Check authentication and fetch initial data
   useEffect(() => {
@@ -30,11 +39,21 @@ const EditProductPage = () => {
 
       try {
         // Check if user is authenticated and is admin
+        const token = localStorage.getItem('token')
+        if (!token) {
+          addToast('Please login to continue', 'error')
+          router.push('/login')
+          return
+        }
+
         const authResponse = await fetch(`${apiBase}/auth/me`, {
-          credentials: 'include'
+          headers: getAuthHeaders()
         })
 
         if (!authResponse.ok) {
+          // Token might be expired, clear it and redirect to login
+          localStorage.removeItem('token')
+          localStorage.removeItem('user')
           addToast('Please login to continue', 'error')
           router.push('/login')
           return
@@ -52,7 +71,7 @@ const EditProductPage = () => {
 
         // Fetch categories
         const categoriesResponse = await fetch(`${apiBase}/categories/all`, {
-          credentials: 'include'
+          headers: getAuthHeaders()
         })
         
         if (categoriesResponse.ok) {
@@ -62,7 +81,7 @@ const EditProductPage = () => {
 
         // Fetch product data
         const productResponse = await fetch(`${apiBase}/admin/products/edit/${productId}`, {
-          credentials: 'include'
+          headers: getAuthHeaders()
         })
 
         if (!productResponse.ok) {
@@ -234,9 +253,8 @@ const EditProductPage = () => {
       // Submit update
       const response = await fetch(`${apiBase}/admin/products/edit/${productId}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-        credentials: 'include'
+        headers: getAuthHeaders(),
+        body: JSON.stringify(payload)
       })
 
       const data = await response.json()

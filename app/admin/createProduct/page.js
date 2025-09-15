@@ -13,8 +13,17 @@ const CreateProductPage = () => {
   const [user, setUser] = useState(null)
   const [loadingAuth, setLoadingAuth] = useState(true)
   const [submitting, setSubmitting] = useState(false)
-  const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'
+  const apiBase = 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'
   const [categories, setCategories] = useState([])
+
+  // Helper function to get auth headers
+  const getAuthHeaders = () => {
+    const token = localStorage.getItem('token')
+    return {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  }
   const [form, setForm] = useState({
     name: '',
     description: '',
@@ -31,11 +40,22 @@ const CreateProductPage = () => {
   // Auth check
   useEffect(() => {
     const check = async () => {
-      const token = localStorage.getItem('token')
-      if (!token) { router.push('/login'); return }
       try {
-        const res = await fetch(`${apiBase}/auth/me`, { headers: { Authorization: `Bearer ${token}` } })
-        if (!res.ok) throw new Error('Auth failed')
+        const token = localStorage.getItem('token')
+        if (!token) {
+          router.push('/login')
+          return
+        }
+
+        const res = await fetch(`${apiBase}/auth/me`, { headers: getAuthHeaders() })
+        if (!res.ok) {
+          // Token might be expired, clear it and redirect to login
+          localStorage.removeItem('token')
+          localStorage.removeItem('user')
+          router.push('/login')
+          return
+        }
+        
         const data = await res.json()
         if (data.success && data.data.role === 'admin') {
           setUser(data.data)
@@ -44,6 +64,9 @@ const CreateProductPage = () => {
           router.push('/')
         }
       } catch (e) {
+        // Clear invalid token and redirect
+        localStorage.removeItem('token')
+        localStorage.removeItem('user')
         router.push('/login')
       } finally {
         setLoadingAuth(false)
@@ -56,8 +79,7 @@ const CreateProductPage = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const token = localStorage.getItem('token')
-        const res = await fetch(`${apiBase}/categories/all`, { headers: { Authorization: `Bearer ${token}` } })
+        const res = await fetch(`${apiBase}/categories/all`, { headers: getAuthHeaders() })
         if (res.ok) {
           const data = await res.json()
           setCategories(data.data.categories.filter(cat => cat.isActive))
@@ -111,7 +133,6 @@ const CreateProductPage = () => {
     if (errs.length) { errs.slice(0,6).forEach(m => addToast(m, 'error')); return }
     setSubmitting(true)
     try {
-      const token = localStorage.getItem('token')
       const payload = {
         ...form,
         sizes: form.sizes.map(s => ({ size: s.size.trim(), price: parseFloat(s.price), stock: parseInt(s.stock) })),
@@ -120,9 +141,8 @@ const CreateProductPage = () => {
       }
       const res = await fetch(`${apiBase}/admin/products/create`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-        credentials: 'include'
+        headers: getAuthHeaders(),
+        body: JSON.stringify(payload)
       })
       const data = await res.json().catch(()=>({}))
       if (res.ok && data.success) {

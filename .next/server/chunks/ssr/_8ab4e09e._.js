@@ -52,7 +52,7 @@ const Navbar = ()=>{
             router.push('/login');
             return;
         }
-        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/auth/me`, {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/auth/me`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             },
@@ -1160,7 +1160,7 @@ const CheckoutPage = ()=>{
                 appliedCoupon: appliedCoupon || undefined
             };
             // Create order
-            const orderRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/orders`, {
+            const orderRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/orders`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -1176,7 +1176,7 @@ const CheckoutPage = ()=>{
             // Handle payment
             if (formData.paymentMethod === 'card') {
                 const amount = total;
-                const piRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/payments/create-intent`, {
+                const piRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/payments/create-intent`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1194,7 +1194,7 @@ const CheckoutPage = ()=>{
                     return;
                 }
                 // Client-side Stripe confirmation would go here
-                await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/payments/confirm`, {
+                await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/payments/confirm`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

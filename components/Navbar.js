@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useCart } from '../context/CartContext'
 import { useToast } from './Toaster'
-import { ShoppingCart, Search, Menu, X, User, Heart } from 'lucide-react'
+import { ShoppingCart, Search, Menu, X, User, Heart, LogOut } from 'lucide-react'
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -16,6 +16,15 @@ const Navbar = () => {
   const router = useRouter()
 
   const cartCount = getCartCount()
+
+  // Helper function to get auth headers
+  const getAuthHeaders = () => {
+    const token = localStorage.getItem('token')
+    return {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  }
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
@@ -36,9 +45,8 @@ const Navbar = () => {
       router.push('/login')
       return
     }
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/auth/me`, {
-      headers: { 'Authorization': `Bearer ${token}` },
-      credentials: 'include'
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/auth/me`, {
+      headers: getAuthHeaders()
     })
       .then(r => r.json())
       .then(data => {
@@ -268,6 +276,22 @@ const Navbar = () => {
                 )}
               </button>
             </div>
+
+            {/* Mobile Logout Button */}
+            {localStorage.getItem('token') && (
+              <div className="px-3 py-2 border-t border-vibe-cookie/20">
+                <button
+                  onClick={() => {
+                    router.push('/logout')
+                    setIsMenuOpen(false)
+                  }}
+                  className="flex items-center gap-2 w-full px-3 py-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors duration-200 font-medium"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Logout
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}

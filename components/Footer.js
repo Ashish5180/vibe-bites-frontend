@@ -26,7 +26,7 @@ const Footer = () => {
               <span className="text-xl font-bold">VIBE BITES</span>
             </div>
             <p className="text-white/80 mb-6 leading-relaxed">
-              Vibe Every Bite. We're committed to bringing you the healthiest and tastiest snacks 
+              Vibe Every Bite. We&apos;re committed to bringing you the healthiest and tastiest snacks 
               that nourish your body and soul.
             </p>
             <div className="flex space-x-4">

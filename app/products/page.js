@@ -21,7 +21,7 @@ const ProductsPage = () => {
 		search: searchParams.get("search") || "",
 	});
 	const [categories, setCategories] = useState([]);
-	const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api";
+	const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api";
 	const [isClient, setIsClient] = useState(false);
 
 	useEffect(() => {
@@ -149,7 +149,7 @@ const ProductsPage = () => {
 						{filters.search && (
 							<div className="mt-4 p-3 bg-vibe-cookie/20 rounded-lg">
 								<p className="text-vibe-brown">
-									Search results for: <span className="font-semibold">"{filters.search}"</span>
+									Search results for: <span className="font-semibold">&quot;{filters.search}&quot;</span>
 									<button
 										onClick={() => handleFilterChange({ search: "" })}
 										className="ml-2 text-vibe-brown/60 hover:text-vibe-brown underline"

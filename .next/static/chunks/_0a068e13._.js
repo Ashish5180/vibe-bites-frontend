@@ -57,7 +57,7 @@ const Navbar = ()=>{
             router.push('/login');
             return;
         }
-        fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api', "/auth/me"), {
+        fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api', "/auth/me"), {
             headers: {
                 'Authorization': "Bearer ".concat(token)
             },
@@ -1153,13 +1153,13 @@ const RazorpayPayment = (param)=>{
         try {
             const token = localStorage.getItem('token');
             // Get Razorpay key
-            const keyRes = await fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api', "/payments/razorpay/keys"));
+            const keyRes = await fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api', "/payments/razorpay/keys"));
             const keyData = await keyRes.json();
             if (!keyRes.ok || !keyData.success) {
                 throw new Error('Failed to get payment keys');
             }
             // Create Razorpay order
-            const orderRes = await fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api', "/payments/razorpay/create-order"), {
+            const orderRes = await fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api', "/payments/razorpay/create-order"), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -1194,7 +1194,7 @@ const RazorpayPayment = (param)=>{
                 handler: async function(response) {
                     try {
                         // Verify payment
-                        const verifyRes = await fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api', "/payments/razorpay/verify"), {
+                        const verifyRes = await fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api', "/payments/razorpay/verify"), {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -1380,7 +1380,7 @@ const CheckoutPage = ()=>{
             paymentMethod: formData.paymentMethod,
             appliedCoupon: appliedCoupon || undefined
         };
-        const orderRes = await fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api', "/orders"), {
+        const orderRes = await fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api', "/orders"), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

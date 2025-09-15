@@ -6,7 +6,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Navbar from '../../../components/Navbar'
 import Footer from '../../../components/Footer'
-import ProductReviews from '../../../components/ProductReviews'
 import { useCart } from '../../../context/CartContext'
 import { useWishlist } from '../../../context/WishlistContext'
 import { useToast } from '../../../components/Toaster'
@@ -56,7 +55,7 @@ export default function ProductDetailPage() {
       setError(null)
       
       try {
-        const response = await fetch(`http://localhost:8080/api/products/${params.id}`, {
+        const response = await fetch(`http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/products/${params.id}`, {
           headers: { 'Cache-Control': 'no-cache' }
         })
         
@@ -423,8 +422,6 @@ export default function ProductDetailPage() {
           </div>
         )}
 
-        {/* Reviews */}
-        <ProductReviews productId={product._id || product.id} productName={product.name} />
       </div>
       
       <Footer />

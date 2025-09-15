@@ -16,7 +16,7 @@ export default function AboutPage() {
             About VIBE BITES
           </h1>
           <p className="text-xl text-vibe-brown/70 max-w-3xl mx-auto">
-            We're on a mission to make healthy snacking delicious, accessible, and enjoyable for everyone.
+            We&apos;re on a mission to make healthy snacking delicious, accessible, and enjoyable for everyone.
           </p>
         </div>
 
@@ -25,7 +25,7 @@ export default function AboutPage() {
           <div>
             <h2 className="text-3xl font-bold text-vibe-brown mb-6">Our Story</h2>
             <p className="text-lg text-vibe-brown/70 mb-6 leading-relaxed">
-              VIBE BITES was born from a simple idea: healthy snacking shouldn't mean compromising on taste. 
+              VIBE BITES was born from a simple idea: healthy snacking shouldn&apos;t mean compromising on taste. 
               Founded in 2020, we started with a vision to create snacks that not only nourish your body 
               but also bring joy to every bite.
             </p>
@@ -35,7 +35,7 @@ export default function AboutPage() {
               passion, innovation, and an unwavering commitment to quality.
             </p>
             <p className="text-lg text-vibe-brown/70 leading-relaxed">
-              Today, we're proud to offer a diverse range of healthy snacks that cater to different tastes 
+              Today, we&apos;re proud to offer a diverse range of healthy snacks that cater to different tastes 
               and dietary preferences, all while maintaining our core values of natural ingredients and 
               exceptional taste.
             </p>

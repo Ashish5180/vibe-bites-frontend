@@ -76,7 +76,7 @@ const Navbar = ()=>{
             router.push('/login');
             return;
         }
-        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/auth/me`, {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/auth/me`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             },
@@ -910,7 +910,7 @@ const CategorySection = ()=>{
             setLoading(true);
             setError(null);
             try {
-                const res = await fetch('http://localhost:8080/api/categories');
+                const res = await fetch('http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/categories');
                 if (!res.ok) throw new Error('Failed to fetch categories');
                 const data = await res.json();
                 setCategories(data.data.categories || []);

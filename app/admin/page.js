@@ -1,7 +1,8 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import { 
   Users, 
   Package, 
@@ -42,17 +43,41 @@ const AdminPage = () => {
   const router = useRouter()
   const { addToast } = useToast()
 
+  // Helper function to get auth headers
+  const getAuthHeaders = () => {
+    const token = localStorage.getItem('token')
+    return {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  }
+
   // Check authentication and admin role
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/auth/me`, {
-          credentials: 'include'
-        })
-        if (!response.ok) {
+        // Get token from localStorage
+        const token = localStorage.getItem('token')
+        if (!token) {
           router.push('/login')
           return
         }
+
+        const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/auth/me`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        })
+        
+        if (!response.ok) {
+          // Token might be expired, clear it and redirect to login
+          localStorage.removeItem('token')
+          localStorage.removeItem('user')
+          router.push('/login')
+          return
+        }
+        
         const data = await response.json()
         if (data.success) {
           const role = data.data.role || data.data.user?.role
@@ -68,6 +93,9 @@ const AdminPage = () => {
         }
       } catch (error) {
         console.error('Auth check error:', error)
+        // Clear invalid token and redirect
+        localStorage.removeItem('token')
+        localStorage.removeItem('user')
         router.push('/login')
       }
     }
@@ -79,7 +107,7 @@ const AdminPage = () => {
     if (user && activeTab === 'dashboard') {
       loadDashboardStats()
     }
-  }, [user, activeTab])
+  }, [user, activeTab, loadDashboardStats])
 
   // Load data based on active tab
   useEffect(() => {
@@ -102,12 +130,12 @@ const AdminPage = () => {
           break
       }
     }
-  }, [user, activeTab, currentPage, searchQuery, filterStatus])
+  }, [user, activeTab, currentPage, searchQuery, filterStatus, loadUsers, loadProducts, loadOrders, loadCoupons, loadReviews])
 
-  const loadDashboardStats = async () => {
+  const loadDashboardStats = useCallback(async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/admin/dashboard`, {
-        credentials: 'include'
+      const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/admin/dashboard`, {
+        headers: getAuthHeaders()
       })
 
       if (response.ok) {
@@ -119,9 +147,9 @@ const AdminPage = () => {
       console.error('Error loading dashboard stats:', error)
       addToast('Error loading dashboard data', 'error')
     }
-  }
+  }, [addToast])
 
-  const loadUsers = async () => {
+  const loadUsers = useCallback(async () => {
     try {
       const params = new URLSearchParams({
         page: currentPage,
@@ -130,8 +158,8 @@ const AdminPage = () => {
         status: filterStatus
       })
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/admin/users?${params}`, {
-        credentials: 'include'
+      const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/admin/users?${params}`, {
+        headers: getAuthHeaders()
       })
 
       if (response.ok) {
@@ -143,9 +171,9 @@ const AdminPage = () => {
       console.error('Error loading users:', error)
       addToast('Error loading users', 'error')
     }
-  }
+  }, [currentPage, searchQuery, filterStatus, addToast])
 
-  const loadProducts = async () => {
+  const loadProducts = useCallback(async () => {
     try {
       const params = new URLSearchParams({
         page: currentPage,
@@ -154,8 +182,8 @@ const AdminPage = () => {
         status: filterStatus
       })
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/admin/products?${params}`, {
-        credentials: 'include'
+      const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/admin/products?${params}`, {
+        headers: getAuthHeaders()
       })
 
       if (response.ok) {
@@ -167,9 +195,9 @@ const AdminPage = () => {
       console.error('Error loading products:', error)
       addToast('Error loading products', 'error')
     }
-  }
+  }, [currentPage, searchQuery, filterStatus, addToast])
 
-  const loadOrders = async () => {
+  const loadOrders = useCallback(async () => {
     try {
       let statusParam = filterStatus
 
@@ -180,8 +208,8 @@ const AdminPage = () => {
         status: statusParam
       })
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/admin/orders?${params}`, {
-        credentials: 'include'
+      const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/admin/orders?${params}`, {
+        headers: getAuthHeaders()
       })
 
       if (response.ok) {
@@ -195,9 +223,9 @@ const AdminPage = () => {
       console.error('Error loading orders:', error)
       addToast('Error loading orders', 'error')
     }
-  }
+  }, [currentPage, searchQuery, filterStatus, addToast])
 
-  const loadCoupons = async () => {
+  const loadCoupons = useCallback(async () => {
     try {
       const params = new URLSearchParams({
         page: currentPage,
@@ -205,8 +233,8 @@ const AdminPage = () => {
         status: filterStatus
       })
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/admin/coupons?${params}`, {
-        credentials: 'include'
+      const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/admin/coupons?${params}`, {
+        headers: getAuthHeaders()
       })
 
       if (response.ok) {
@@ -218,9 +246,9 @@ const AdminPage = () => {
       console.error('Error loading coupons:', error)
       addToast('Error loading coupons', 'error')
     }
-  }
+  }, [currentPage, filterStatus, addToast])
 
-  const loadReviews = async () => {
+  const loadReviews = useCallback(async () => {
     try {
       const params = new URLSearchParams({
         page: currentPage,
@@ -228,8 +256,8 @@ const AdminPage = () => {
         status: filterStatus
       })
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/reviews/admin?${params}`, {
-        credentials: 'include'
+      const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/reviews/admin?${params}`, {
+        headers: getAuthHeaders()
       })
 
       if (response.ok) {
@@ -241,22 +269,22 @@ const AdminPage = () => {
       console.error('Error loading reviews:', error)
       addToast('Error loading reviews', 'error')
     }
-  }
+  }, [currentPage, filterStatus, addToast])
 
   const handleLogout = () => {
-  router.push('/logout')
-  addToast('Logged out successfully', 'success')
+    // Clear localStorage
+    localStorage.removeItem('token')
+    localStorage.removeItem('user')
+    router.push('/login')
+    addToast('Logged out successfully', 'success')
   }
 
   const handleUserStatusToggle = async (userId, currentStatus) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/admin/users/${userId}/status`, {
+      const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/admin/users/${userId}/status`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ isActive: !currentStatus }),
-        credentials: 'include'
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ isActive: !currentStatus })
       })
 
       if (response.ok) {
@@ -273,13 +301,9 @@ const AdminPage = () => {
 
   const handleOrderStatusUpdate = async (orderId, newStatus) => {
     try {
-      const token = localStorage.getItem('token')
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/admin/orders/${orderId}/status`, {
+      const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/admin/orders/${orderId}/status`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify({ status: newStatus })
       })
 
@@ -298,13 +322,9 @@ const AdminPage = () => {
 
   const handleReviewStatusToggle = async (reviewId, isActive) => {
     try {
-      const token = localStorage.getItem('token')
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/reviews/admin/${reviewId}/status`, {
+      const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/reviews/admin/${reviewId}/status`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify({ isActive })
       })
 
@@ -341,12 +361,9 @@ Verified: ${review.verified ? 'Yes' : 'No'}
     if (!confirm(`Are you sure you want to delete this ${type}?`)) return
 
     try {
-      const token = localStorage.getItem('token')
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/admin/${type}/${id}`, {
+      const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/admin/${type}/${id}`, {
         method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+        headers: getAuthHeaders()
       })
 
       if (response.ok) {
@@ -693,7 +710,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center">
                               <div className="h-10 w-10 flex-shrink-0">
-                                <img className="h-10 w-10 rounded-full object-cover" src={product.images?.[0] || product.image || '/images/placeholder.jpg'} alt={product.name} />
+                                <Image className="h-10 w-10 rounded-full object-cover" src={product.images?.[0] || product.image || '/images/placeholder.jpg'} alt={product.name} width={40} height={40} />
                               </div>
                               <div className="ml-4">
                                 <div className="text-sm font-medium text-vibe-brown">{product.name}</div>
@@ -977,10 +994,12 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                           <div className="flex items-center space-x-2">
                             {review.productImage && (
-                              <img
+                              <Image
                                 src={review.productImage}
                                 alt={review.productName}
                                 className="w-8 h-8 rounded object-cover"
+                                width={32}
+                                height={32}
                               />
                             )}
                             <span>{review.productName}</span>

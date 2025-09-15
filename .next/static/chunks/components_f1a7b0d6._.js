@@ -57,7 +57,7 @@ const Navbar = ()=>{
             router.push('/login');
             return;
         }
-        fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api', "/auth/me"), {
+        fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api', "/auth/me"), {
             headers: {
                 'Authorization': "Bearer ".concat(token)
             },
@@ -918,7 +918,7 @@ const CategorySection = ()=>{
                 setLoading(true);
                 setError(null);
                 try {
-                    const res = await fetch('http://localhost:8080/api/categories');
+                    const res = await fetch('http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/categories');
                     if (!res.ok) throw new Error('Failed to fetch categories');
                     const data = await res.json();
                     setCategories(data.data.categories || []);

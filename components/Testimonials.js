@@ -59,7 +59,7 @@ const Testimonials = () => {
             What Our Customers Say
           </h2>
           <p className="text-lg text-vibe-brown/70 max-w-2xl mx-auto">
-            Don't just take our word for it. Here's what our happy customers have to say about VIBE BITES
+            Don&apos;t just take our word for it. Here&apos;s what our happy customers have to say about VIBE BITES
           </p>
         </div>
 
@@ -84,7 +84,7 @@ const Testimonials = () => {
 
               {/* Testimonial Text */}
               <p className="text-vibe-brown/80 mb-6 leading-relaxed">
-                "{testimonial.text}"
+                &quot;{testimonial.text}&quot;
               </p>
 
               {/* Customer Info */}

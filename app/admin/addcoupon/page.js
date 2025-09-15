@@ -28,9 +28,18 @@ export default function AddCouponPage() {
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
 
+  // Helper function to get auth headers
+  const getAuthHeaders = () => {
+    const token = localStorage.getItem('token')
+    return {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  }
+
   useEffect(() => {
     // Fetch categories from backend
-    fetch("http://localhost:8080/api/products/categories")
+    fetch("http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/products/categories")
       .then(res => res.json())
       .then(data => {
         setCategories(data.data.categories || []);
@@ -79,11 +88,10 @@ export default function AddCouponPage() {
         applicableUsers: form.applicableUsers ? form.applicableUsers.split(',').map(u => u.trim()) : [],
         excludedUsers: form.excludedUsers ? form.excludedUsers.split(',').map(u => u.trim()) : []
       };
-      const res = await fetch("http://localhost:8080/api/coupons", {
+      const res = await fetch("http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/coupons", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-        credentials: "include"
+        headers: getAuthHeaders(),
+        body: JSON.stringify(payload)
       });
       const data = await res.json();
       if (res.ok) {

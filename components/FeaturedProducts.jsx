@@ -29,7 +29,7 @@ function FeaturedProductsList() {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch('http://localhost:8080/api/products');
+        const res = await fetch('http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/products');
         if (!res.ok) throw new Error('Failed to fetch products');
         const data = await res.json();
         // Filter products with featured field true

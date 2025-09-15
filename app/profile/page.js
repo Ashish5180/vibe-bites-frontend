@@ -5,7 +5,7 @@ import Navbar from '../../components/Navbar'
 import Footer from '../../components/Footer'
 import { useRouter } from 'next/navigation'
 import { useToast } from '../../components/Toaster'
-import { Star, Package, Calendar, ExternalLink } from 'lucide-react'
+import { Star, Package, Calendar, ExternalLink, LogOut } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -19,17 +19,25 @@ const ProfilePage = () => {
   const router = useRouter()
   const { addToast } = useToast()
 
+  // Helper function to get auth headers
+  const getAuthHeaders = () => {
+    const token = localStorage.getItem('token')
+    return {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  }
+
   useEffect(() => {
     const loadProfile = async () => {
       try {
         const token = localStorage.getItem('token')
-        const headers = {}
-        if (token) {
-          headers['Authorization'] = `Bearer ${token}`
+        if (!token) {
+          router.push('/login')
+          return
         }
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/auth/profile`, {
-          headers,
-          credentials: 'include'
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/auth/profile`, {
+          headers: getAuthHeaders()
         })
         const data = await res.json()
         if (data.success) {
@@ -59,8 +67,8 @@ const ProfilePage = () => {
     const loadOrders = async () => {
       setOrdersLoading(true)
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/orders`, {
-          credentials: 'include'
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/orders`, {
+          headers: getAuthHeaders()
         })
         const data = await res.json()
         if (data.success) {
@@ -79,8 +87,8 @@ const ProfilePage = () => {
     const loadReviews = async () => {
       setReviewsLoading(true)
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/reviews/user`, {
-          credentials: 'include'
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/reviews/user`, {
+          headers: getAuthHeaders()
         })
         const data = await res.json()
         if (data.success) {
@@ -105,6 +113,16 @@ const ProfilePage = () => {
         ) : user ? (
           <>
             <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
+              <div className="flex justify-between items-start mb-6">
+                <h2 className="text-xl font-bold text-vibe-brown">Profile Information</h2>
+                <button
+                  onClick={() => router.push('/logout')}
+                  className="flex items-center gap-2 px-4 py-2 bg-red-100 text-red-700 hover:bg-red-200 rounded-lg transition-colors duration-200 font-medium"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Logout
+                </button>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <div className="text-vibe-brown/60 text-sm">First Name</div>

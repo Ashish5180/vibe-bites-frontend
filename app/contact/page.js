@@ -43,7 +43,7 @@ export default function ContactPage() {
             Get in Touch
           </h1>
           <p className="text-base sm:text-xl text-vibe-brown/70 max-w-3xl mx-auto">
-            Have questions, feedback, or just want to say hello? We'd love to hear from you!
+            Have questions, feedback, or just want to say hello? We&apos;d love to hear from you!
           </p>
         </div>
 
@@ -196,7 +196,7 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-semibold text-vibe-brown mb-2">Do you offer refunds?</h3>
                   <p className="text-vibe-brown/70">
-                    Yes, we offer a 30-day money-back guarantee if you're not satisfied with your purchase.
+                    Yes, we offer a 30-day money-back guarantee if you&apos;re not satisfied with your purchase.
                   </p>
                 </div>
                 <div>

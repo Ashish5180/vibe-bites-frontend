@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { Plus, Edit2, Trash2, ToggleLeft, ToggleRight, Save, X, RefreshCw } from 'lucide-react'
 import { useToast } from '../../../components/Toaster'
@@ -15,13 +15,27 @@ const AddCategoryPage = () => {
   const [creating, setCreating] = useState(false)
   const [editingId, setEditingId] = useState(null)
   const [editValues, setEditValues] = useState({ name: '', description: '', image: '' })
-  const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'
+  const apiBase = 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'
+
+  // Helper function to get auth headers
+  const getAuthHeaders = () => {
+    const token = localStorage.getItem('token')
+    return {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  }
 
   // Auth check (admin only)
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await fetch(`${apiBase}/auth/me`, { credentials: 'include' })
+        const token = localStorage.getItem('token')
+        if (!token) {
+          router.push('/login')
+          return
+        }
+        const res = await fetch(`${apiBase}/auth/me`, { headers: getAuthHeaders() })
         if (!res.ok) throw new Error('Auth failed')
         const data = await res.json()
         if (data.success && data.data.role === 'admin') {
@@ -38,11 +52,11 @@ const AddCategoryPage = () => {
     checkAuth()
   }, [apiBase, router, addToast])
 
-  useEffect(() => { if (user) loadCategories() }, [user])
+  useEffect(() => { if (user) loadCategories() }, [user, loadCategories])
 
-  const loadCategories = async () => {
+  const loadCategories = useCallback(async () => {
     try {
-      const res = await fetch(`${apiBase}/categories/all`, { credentials: 'include' })
+      const res = await fetch(`${apiBase}/categories/all`, { headers: getAuthHeaders() })
       if (res.ok) {
         const data = await res.json()
         setCategories(data.data.categories)
@@ -50,7 +64,7 @@ const AddCategoryPage = () => {
     } catch (e) {
       addToast('Error loading categories', 'error')
     }
-  }
+  }, [apiBase, addToast])
 
   const handleCreate = async (e) => {
     e.preventDefault()
@@ -66,9 +80,12 @@ const AddCategoryPage = () => {
       
       const res = await fetch(`${apiBase}/categories`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        headers: getAuthHeaders(),
         body: JSON.stringify(payload),
-        credentials: 'include'
+        headers: getAuthHeaders()
       })
       const data = await res.json()
       if (res.ok && data.success) {
@@ -102,9 +119,12 @@ const AddCategoryPage = () => {
       
       const res = await fetch(`${apiBase}/categories/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        headers: getAuthHeaders(),
         body: JSON.stringify(payload),
-        credentials: 'include'
+        headers: getAuthHeaders()
       })
       const data = await res.json()
       if (res.ok && data.success) {
@@ -123,9 +143,12 @@ const AddCategoryPage = () => {
     try {
       const res = await fetch(`${apiBase}/categories/${cat._id}/status`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        headers: getAuthHeaders(),
         body: JSON.stringify({ isActive: !cat.isActive }),
-        credentials: 'include'
+        headers: getAuthHeaders()
       })
       if (res.ok) {
         addToast('Status updated', 'success')
@@ -139,8 +162,10 @@ const AddCategoryPage = () => {
   const deleteCategory = async (id) => {
     if (!confirm('Delete this category?')) return
     try {
-      const token = localStorage.getItem('token')
-      const res = await fetch(`${apiBase}/categories/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } })
+      const res = await fetch(`${apiBase}/categories/${id}`, { 
+        method: 'DELETE', 
+        headers: getAuthHeaders() 
+      })
       if (res.ok) {
         addToast('Category deleted', 'success')
         loadCategories()
@@ -254,7 +279,7 @@ const AddCategoryPage = () => {
         </table>
       </div>
 
-      <p className="text-xs text-gray-500 mt-6">Note: Product schema still uses a fixed enum for categories; newly created categories here won't be usable for products until that enum is updated (left unchanged as requested).</p>
+      <p className="text-xs text-gray-500 mt-6">Note: Product schema still uses a fixed enum for categories; newly created categories here won&apos;t be usable for products until that enum is updated (left unchanged as requested).</p>
     </div>
   )
 }

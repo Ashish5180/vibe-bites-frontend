@@ -74,7 +74,7 @@ const Navbar = ()=>{
         const token = localStorage.getItem('token');
         if (token) {
             // Check if user is admin and redirect accordingly
-            fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/auth/me`, {
+            fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/auth/me`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

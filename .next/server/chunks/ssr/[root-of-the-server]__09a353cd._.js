@@ -68,7 +68,7 @@ const AdminPage = ()=>{
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
         const checkAuth = async ()=>{
             try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/auth/me`, {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/auth/me`, {
                     credentials: 'include'
                 });
                 if (!response.ok) {
@@ -134,7 +134,7 @@ const AdminPage = ()=>{
     ]);
     const loadDashboardStats = async ()=>{
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/admin/dashboard`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/admin/dashboard`, {
                 credentials: 'include'
             });
             if (response.ok) {
@@ -155,7 +155,7 @@ const AdminPage = ()=>{
                 search: searchQuery,
                 status: filterStatus
             });
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/admin/users?${params}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/admin/users?${params}`, {
                 credentials: 'include'
             });
             if (response.ok) {
@@ -176,7 +176,7 @@ const AdminPage = ()=>{
                 search: searchQuery,
                 status: filterStatus
             });
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/admin/products?${params}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/admin/products?${params}`, {
                 credentials: 'include'
             });
             if (response.ok) {
@@ -197,7 +197,7 @@ const AdminPage = ()=>{
                 search: searchQuery,
                 status: filterStatus
             });
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/admin/orders?${params}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/admin/orders?${params}`, {
                 credentials: 'include'
             });
             if (response.ok) {
@@ -217,7 +217,7 @@ const AdminPage = ()=>{
                 limit: 10,
                 status: filterStatus
             });
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/admin/coupons?${params}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/admin/coupons?${params}`, {
                 credentials: 'include'
             });
             if (response.ok) {
@@ -236,7 +236,7 @@ const AdminPage = ()=>{
     };
     const handleUserStatusToggle = async (userId, currentStatus)=>{
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/admin/users/${userId}/status`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/admin/users/${userId}/status`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -260,7 +260,7 @@ const AdminPage = ()=>{
     const handleOrderStatusUpdate = async (orderId, newStatus)=>{
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/admin/orders/${orderId}/status`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/admin/orders/${orderId}/status`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -285,7 +285,7 @@ const AdminPage = ()=>{
         if (!confirm(`Are you sure you want to delete this ${type}?`)) return;
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/admin/${type}/${id}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/admin/${type}/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`

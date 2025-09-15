@@ -86,6 +86,15 @@ export const CartProvider = ({ children }) => {
     appliedCoupon: null
   })
 
+  // Helper function to get auth headers
+  const getAuthHeaders = () => {
+    const token = localStorage.getItem('token')
+    return {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  }
+
   // Load cart from localStorage on mount
   useEffect(() => {
     const savedCart = localStorage.getItem('vibe-bites-cart')
@@ -99,18 +108,14 @@ export const CartProvider = ({ children }) => {
   useEffect(() => {
     localStorage.setItem('vibe-bites-cart', JSON.stringify(state))
     // If logged-in, try to sync to server (best-effort)
-    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
-    if (token) {
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/cart/sync`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        credentials: 'include',
-        body: JSON.stringify(state)
-      }).catch(() => {})
-    }
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/cart/sync`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      headers: getAuthHeaders(),
+      body: JSON.stringify(state)
+    }).catch(() => {})
   }, [state])
 
   const addToCart = (product, selectedSize, quantity = 1) => {
@@ -156,22 +161,19 @@ export const CartProvider = ({ children }) => {
 
   const applyCoupon = async (couponCode) => {
     try {
-      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
       const headers = {
         'Content-Type': 'application/json',
       };
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-      }
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/coupons/validate`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/coupons/validate`, {
         method: 'POST',
         headers,
+        headers: getAuthHeaders(),
         body: JSON.stringify({ 
           code: couponCode, 
           orderAmount: getCartTotal(),
           items: state.items 
         }),
-        credentials: 'include'
+        headers: getAuthHeaders()
       });
       const data = await res.json();
       if (res.ok && data.success && data.data && data.data.coupon) {

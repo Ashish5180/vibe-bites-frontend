@@ -55,7 +55,7 @@ const Navbar = ()=>{
         const token = localStorage.getItem('token');
         if (token) {
             // Check if user is admin and redirect accordingly
-            fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api', "/auth/me"), {
+            fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api', "/auth/me"), {
                 headers: {
                     'Authorization': "Bearer ".concat(token)
                 }
@@ -1149,7 +1149,7 @@ function AddCouponPage() {
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "AddCouponPage.useEffect": ()=>{
             // Fetch categories from backend
-            fetch("http://localhost:8080/api/products/categories").then({
+            fetch("http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/products/categories").then({
                 "AddCouponPage.useEffect": (res)=>res.json()
             }["AddCouponPage.useEffect"]).then({
                 "AddCouponPage.useEffect": (data)=>{
@@ -1216,7 +1216,7 @@ function AddCouponPage() {
                 applicableUsers: form.applicableUsers ? form.applicableUsers.split(',').map((u)=>u.trim()) : [],
                 excludedUsers: form.excludedUsers ? form.excludedUsers.split(',').map((u)=>u.trim()) : []
             };
-            const res = await fetch("http://localhost:8080/api/coupons", {
+            const res = await fetch("http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/coupons", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

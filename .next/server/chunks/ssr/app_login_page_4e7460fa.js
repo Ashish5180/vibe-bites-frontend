@@ -47,7 +47,7 @@ const LoginPage = ()=>{
         setIsLoading(true);
         try {
             const endpoint = isRegistering ? '/auth/register' : '/auth/login';
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}${endpoint}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}${endpoint}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

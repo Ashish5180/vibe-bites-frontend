@@ -97,6 +97,14 @@ const CartProvider = (param)=>{
         items: [],
         appliedCoupon: null
     });
+    // Helper function to get auth headers
+    const getAuthHeaders = ()=>{
+        const token = localStorage.getItem('token');
+        return {
+            'Authorization': "Bearer ".concat(token),
+            'Content-Type': 'application/json'
+        };
+    };
     // Load cart from localStorage on mount
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "CartProvider.useEffect": ()=>{
@@ -115,20 +123,16 @@ const CartProvider = (param)=>{
         "CartProvider.useEffect": ()=>{
             localStorage.setItem('vibe-bites-cart', JSON.stringify(state));
             // If logged-in, try to sync to server (best-effort)
-            const token = ("TURBOPACK compile-time truthy", 1) ? localStorage.getItem('token') : "TURBOPACK unreachable";
-            if (token) {
-                fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api', "/cart/sync"), {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': "Bearer ".concat(token)
-                    },
-                    credentials: 'include',
-                    body: JSON.stringify(state)
-                }).catch({
-                    "CartProvider.useEffect": ()=>{}
-                }["CartProvider.useEffect"]);
-            }
+            fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api', "/cart/sync"), {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                headers: getAuthHeaders(),
+                body: JSON.stringify(state)
+            }).catch({
+                "CartProvider.useEffect": ()=>{}
+            }["CartProvider.useEffect"]);
         }
     }["CartProvider.useEffect"], [
         state
@@ -185,22 +189,19 @@ const CartProvider = (param)=>{
     };
     const applyCoupon = async (couponCode)=>{
         try {
-            const token = ("TURBOPACK compile-time truthy", 1) ? localStorage.getItem('token') : "TURBOPACK unreachable";
             const headers = {
                 'Content-Type': 'application/json'
             };
-            if (token) {
-                headers['Authorization'] = "Bearer ".concat(token);
-            }
-            const res = await fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api', "/coupons/validate"), {
+            const res = await fetch("".concat(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api', "/coupons/validate"), {
                 method: 'POST',
                 headers,
+                headers: getAuthHeaders(),
                 body: JSON.stringify({
                     code: couponCode,
                     orderAmount: getCartTotal(),
                     items: state.items
                 }),
-                credentials: 'include'
+                headers: getAuthHeaders()
             });
             const data = await res.json();
             if (res.ok && data.success && data.data && data.data.coupon) {
@@ -271,7 +272,7 @@ const CartProvider = (param)=>{
         children: children
     }, void 0, false, {
         fileName: "[project]/context/CartContext.js",
-        lineNumber: 234,
+        lineNumber: 236,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };

@@ -17,12 +17,21 @@ const ProductReviews = ({ productId, productName }) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
+  // Helper function to get auth headers
+  const getAuthHeaders = () => {
+    const token = localStorage.getItem('token')
+    return {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  }
+
   React.useEffect(() => {
     async function fetchReviews() {
       setLoading(true)
       setError(null)
       try {
-        const res = await fetch(`http://localhost:8080/api/reviews/product/${productId}`)
+        const res = await fetch(`http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/reviews/product/${productId}`)
         if (!res.ok) throw new Error('Failed to fetch reviews')
         const data = await res.json()
         if (data.success) {
@@ -43,20 +52,29 @@ const ProductReviews = ({ productId, productName }) => {
     e.preventDefault()
     async function submitReview() {
       try {
-        // Get token from cookie
-        function getCookie(name) {
-          const value = `; ${document.cookie}`;
-          const parts = value.split(`; ${name}=`);
-          if (parts.length === 2) return parts.pop().split(';').shift();
+        const token = localStorage.getItem('token')
+        if (!token) {
+          alert('Please login to submit a review')
+          return
         }
-        const token = getCookie('token');
-        const res = await fetch('http://localhost:8080/api/reviews', {
+
+        // Client-side validation
+        if (!newReview.title.trim() || newReview.title.trim().length < 5) {
+          alert('Title must be at least 5 characters long')
+          return
+        }
+        if (!newReview.comment.trim() || newReview.comment.trim().length < 10) {
+          alert('Comment must be at least 10 characters long')
+          return
+        }
+        if (newReview.rating < 1 || newReview.rating > 5) {
+          alert('Rating must be between 1 and 5')
+          return
+        }
+        
+        const res = await fetch('http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/reviews', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          credentials: 'include',
+          headers: getAuthHeaders(),
           body: JSON.stringify({
             productId,
             rating: newReview.rating,
@@ -64,12 +82,21 @@ const ProductReviews = ({ productId, productName }) => {
             comment: newReview.comment
           })
         })
-        if (!res.ok) throw new Error('Failed to submit review')
-        setShowReviewForm(false)
-        setNewReview({ rating: 5, title: '', comment: '' })
-        // Refresh reviews after submit
+        if (!res.ok) {
+          const errorData = await res.json().catch(() => ({}))
+          throw new Error(errorData.message || 'Failed to submit review')
+        }
+        
+        const data = await res.json()
+        if (data.success) {
+          setShowReviewForm(false)
+          setNewReview({ rating: 5, title: '', comment: '' })
+          // Refresh reviews after submit
+        } else {
+          throw new Error(data.message || 'Failed to submit review')
+        }
         if (productId) {
-          const reviewsRes = await fetch(`http://localhost:8080/api/reviews/product/${productId}`)
+          const reviewsRes = await fetch(`http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/reviews/product/${productId}`)
           if (reviewsRes.ok) {
             const data = await reviewsRes.json()
             setReviews(data.data.reviews)

@@ -97,6 +97,14 @@ const CartProvider = ({ children })=>{
         items: [],
         appliedCoupon: null
     });
+    // Helper function to get auth headers
+    const getAuthHeaders = ()=>{
+        const token = localStorage.getItem('token');
+        return {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        };
+    };
     // Load cart from localStorage on mount
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
         const savedCart = localStorage.getItem('vibe-bites-cart');
@@ -112,9 +120,14 @@ const CartProvider = ({ children })=>{
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
         localStorage.setItem('vibe-bites-cart', JSON.stringify(state));
         // If logged-in, try to sync to server (best-effort)
-        const token = ("TURBOPACK compile-time falsy", 0) ? "TURBOPACK unreachable" : null;
-        if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
-        ;
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/cart/sync`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            headers: getAuthHeaders(),
+            body: JSON.stringify(state)
+        }).catch(()=>{});
     }, [
         state
     ]);
@@ -167,21 +180,19 @@ const CartProvider = ({ children })=>{
     };
     const applyCoupon = async (couponCode)=>{
         try {
-            const token = ("TURBOPACK compile-time falsy", 0) ? "TURBOPACK unreachable" : null;
             const headers = {
                 'Content-Type': 'application/json'
             };
-            if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
-            ;
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/coupons/validate`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/coupons/validate`, {
                 method: 'POST',
                 headers,
+                headers: getAuthHeaders(),
                 body: JSON.stringify({
                     code: couponCode,
                     orderAmount: getCartTotal(),
                     items: state.items
                 }),
-                credentials: 'include'
+                headers: getAuthHeaders()
             });
             const data = await res.json();
             if (res.ok && data.success && data.data && data.data.coupon) {
@@ -252,7 +263,7 @@ const CartProvider = ({ children })=>{
         children: children
     }, void 0, false, {
         fileName: "[project]/context/CartContext.js",
-        lineNumber: 234,
+        lineNumber: 236,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };

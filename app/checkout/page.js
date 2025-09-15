@@ -29,6 +29,15 @@ const CheckoutPage = () => {
   const [createdOrder, setCreatedOrder] = useState(null)
   const [isProcessing, setIsProcessing] = useState(false)
 
+  // Helper function to get auth headers
+  const getAuthHeaders = () => {
+    const token = localStorage.getItem('token')
+    return {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  }
+
   const subtotal = items.reduce((total, item) => total + (item.price * item.quantity), 0)
   const total = getCartTotal()
   const discount = subtotal - total
@@ -68,12 +77,12 @@ const CheckoutPage = () => {
     }
 
     try {
-      const orderRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/orders`, {
+      const orderRes = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/orders`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Content-Type': 'application/json'
         },
+        headers: getAuthHeaders(),
         body: JSON.stringify(payload)
       })
       

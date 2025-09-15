@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import Image from 'next/image'
 import Navbar from '../../components/Navbar'
 import Footer from '../../components/Footer'
 import { useToast } from '../../components/Toaster'
@@ -14,6 +15,15 @@ const TrackOrderPage = () => {
   const [orderId, setOrderId] = useState('')
   const [orderData, setOrderData] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
+
+  // Helper function to get auth headers
+  const getAuthHeaders = () => {
+    const token = localStorage.getItem('token')
+    return {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  }
 
   useEffect(() => {
     const queryOrderId = searchParams.get('orderId')
@@ -33,7 +43,7 @@ const TrackOrderPage = () => {
     setIsLoading(true)
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/orders/${orderId}/track`)
+      const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/orders/${orderId}/track`)
       const data = await response.json()
 
       if (response.ok && data.success) {
@@ -101,12 +111,12 @@ const TrackOrderPage = () => {
 
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/orders/${orderId}/cancel`, {
+      const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/orders/${orderId}/cancel`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Content-Type': 'application/json'
         },
+        headers: getAuthHeaders(),
         body: JSON.stringify({
           reason: reasonMap[reason],
           description
@@ -150,12 +160,12 @@ const TrackOrderPage = () => {
 
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/reviews/order/${orderData.order._id}`, {
+      const response = await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/reviews/order/${orderData.order._id}`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Content-Type': 'application/json'
         },
+        headers: getAuthHeaders(),
         body: JSON.stringify({
           productId,
           rating: parseInt(rating),
@@ -302,10 +312,12 @@ const TrackOrderPage = () => {
                     <div className="flex items-center space-x-4 mb-4">
                       <div className="w-16 h-16 bg-gray-200 rounded-lg flex-shrink-0">
                         {item.image && (
-                          <img
+                          <Image
                             src={item.image}
                             alt={item.name}
                             className="w-full h-full object-cover rounded-lg"
+                            width={64}
+                            height={64}
                           />
                         )}
                       </div>
@@ -388,10 +400,12 @@ const TrackOrderPage = () => {
                   <div key={index} className="flex items-center space-x-4 p-4 bg-vibe-bg rounded-lg">
                     <div className="w-16 h-16 bg-gray-200 rounded-lg flex-shrink-0">
                       {item.image && (
-                        <img
+                        <Image
                           src={item.image}
                           alt={item.name}
                           className="w-full h-full object-cover rounded-lg"
+                          width={64}
+                          height={64}
                         />
                       )}
                     </div>

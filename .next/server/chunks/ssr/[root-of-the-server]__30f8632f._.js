@@ -173,7 +173,7 @@ const CartProvider = ({ children })=>{
             };
             if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
             ;
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/coupons/validate`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/coupons/validate`, {
                 method: 'POST',
                 headers,
                 body: JSON.stringify({
