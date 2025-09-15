@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import dynamic from 'next/dynamic'
+import React, { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-export default function EditCouponPage() {
+function EditCouponContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const couponId = searchParams.get("id");
@@ -211,3 +212,16 @@ export default function EditCouponPage() {
     </>
   );
 }
+
+const EditCouponPage = () => {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-vibe-bg text-vibe-brown">Loading...</div>}>
+      <EditCouponContent />
+    </Suspense>
+  );
+}
+
+export default dynamic(() => Promise.resolve(EditCouponPage), {
+  ssr: false,
+  loading: () => <div className="min-h-screen flex items-center justify-center bg-vibe-bg text-vibe-brown">Loading...</div>
+})

@@ -1,11 +1,11 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useToast } from '../../../components/Toaster'
 import { Loader2, ArrowLeft, Save, Plus, X, Home } from 'lucide-react'
 
-const EditProductPage = () => {
+function EditProductContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { addToast } = useToast()
@@ -583,6 +583,14 @@ const EditProductPage = () => {
       </div>
     </div>
   )
+}
+
+const EditProductPage = () => {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-vibe-bg text-vibe-brown">Loading...</div>}>
+      <EditProductContent />
+    </Suspense>
+  );
 }
 
 export default EditProductPage

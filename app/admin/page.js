@@ -1,5 +1,6 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import React, { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
@@ -28,6 +29,7 @@ import { useToast } from '../../components/Toaster'
 const AdminPage = () => {
   const [activeTab, setActiveTab] = useState('dashboard')
   const [isLoading, setIsLoading] = useState(true)
+  const [isClient, setIsClient] = useState(false)
   const [user, setUser] = useState(null)
   const [dashboardStats, setDashboardStats] = useState(null)
   const [users, setUsers] = useState([])
@@ -45,6 +47,7 @@ const AdminPage = () => {
 
   // Helper function to get auth headers
   const getAuthHeaders = () => {
+    if (typeof window === 'undefined') return { 'Content-Type': 'application/json' }
     const token = localStorage.getItem('token')
     return {
       'Authorization': `Bearer ${token}`,
@@ -53,7 +56,14 @@ const AdminPage = () => {
   }
 
   // Check authentication and admin role
+  // Set client state
   useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  useEffect(() => {
+    if (!isClient) return
+    
     const checkAuth = async () => {
       try {
         // Get token from localStorage
@@ -100,7 +110,7 @@ const AdminPage = () => {
       }
     }
     checkAuth()
-  }, [router, addToast])
+  }, [isClient, router, addToast])
 
   // Load dashboard data
   useEffect(() => {
@@ -388,7 +398,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
     }
   }
 
-  if (isLoading) {
+  if (!isClient || isLoading) {
     return (
       <div className="min-h-screen bg-vibe-bg flex items-center justify-center">
         <div className="text-vibe-brown text-xl">Loading...</div>
@@ -1107,4 +1117,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
   )
 }
 
-export default AdminPage
+export default dynamic(() => Promise.resolve(AdminPage), {
+  ssr: false,
+  loading: () => <div className="min-h-screen flex items-center justify-center bg-vibe-bg text-vibe-brown">Loading...</div>
+})

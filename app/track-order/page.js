@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import Navbar from '../../components/Navbar'
@@ -8,7 +8,7 @@ import Footer from '../../components/Footer'
 import { useToast } from '../../components/Toaster'
 import { Search, Package, CheckCircle, Clock, Truck, MapPin, Loader2 } from 'lucide-react'
 
-const TrackOrderPage = () => {
+function TrackOrderContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { addToast } = useToast()
@@ -429,6 +429,14 @@ const TrackOrderPage = () => {
       <Footer />
     </div>
   )
+}
+
+const TrackOrderPage = () => {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-vibe-bg text-vibe-brown">Loading...</div>}>
+      <TrackOrderContent />
+    </Suspense>
+  );
 }
 
 export default TrackOrderPage

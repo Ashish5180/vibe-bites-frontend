@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
@@ -9,7 +9,7 @@ import FilterSidebar from "../../components/FilterSidebar";
 import { Filter, Grid, List } from "lucide-react";
 import Head from "next/head";
 
-const ProductsPage = () => {
+function ProductsContent() {
 	const searchParams = useSearchParams();
 	const [products, setProducts] = useState([]);
 	const [filteredProducts, setFilteredProducts] = useState([]);
@@ -229,6 +229,14 @@ const ProductsPage = () => {
 				<Footer />
 			</div>
 		</React.Fragment>
+	);
+};
+
+const ProductsPage = () => {
+	return (
+		<Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-vibe-bg text-vibe-brown">Loading...</div>}>
+			<ProductsContent />
+		</Suspense>
 	);
 };
 

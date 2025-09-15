@@ -1,5 +1,6 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import React, { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { Plus, Edit2, Trash2, ToggleLeft, ToggleRight, Save, X, RefreshCw } from 'lucide-react'
@@ -10,6 +11,7 @@ const AddCategoryPage = () => {
   const { addToast } = useToast()
   const [user, setUser] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [isClient, setIsClient] = useState(false)
   const [categories, setCategories] = useState([])
   const [form, setForm] = useState({ name: '', description: '', image: '' })
   const [creating, setCreating] = useState(false)
@@ -19,6 +21,7 @@ const AddCategoryPage = () => {
 
   // Helper function to get auth headers
   const getAuthHeaders = () => {
+    if (typeof window === 'undefined') return { 'Content-Type': 'application/json' }
     const token = localStorage.getItem('token')
     return {
       'Authorization': `Bearer ${token}`,
@@ -26,8 +29,15 @@ const AddCategoryPage = () => {
     }
   }
 
+  // Set client state
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
   // Auth check (admin only)
   useEffect(() => {
+    if (!isClient) return
+    
     const checkAuth = async () => {
       try {
         const token = localStorage.getItem('token')
@@ -50,7 +60,7 @@ const AddCategoryPage = () => {
       }
     }
     checkAuth()
-  }, [apiBase, router, addToast])
+  }, [isClient, apiBase, router, addToast])
 
   useEffect(() => { if (user) loadCategories() }, [user, loadCategories])
 
@@ -175,7 +185,7 @@ const AddCategoryPage = () => {
     } catch (e) { addToast('Delete failed', 'error') }
   }
 
-  if (isLoading) {
+  if (!isClient || isLoading) {
     return <div className="min-h-screen flex items-center justify-center bg-vibe-bg text-vibe-brown">Loading...</div>
   }
 
@@ -284,4 +294,7 @@ const AddCategoryPage = () => {
   )
 }
 
-export default AddCategoryPage
+export default dynamic(() => Promise.resolve(AddCategoryPage), {
+  ssr: false,
+  loading: () => <div className="min-h-screen flex items-center justify-center bg-vibe-bg text-vibe-brown">Loading...</div>
+})

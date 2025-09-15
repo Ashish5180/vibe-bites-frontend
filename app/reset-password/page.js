@@ -1,12 +1,12 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Lock, Eye, EyeOff, Loader2, CheckCircle } from 'lucide-react'
 import { useToast } from '../../components/Toaster'
 
-const ResetPasswordPage = () => {
+function ResetPasswordContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const { addToast } = useToast()
@@ -243,6 +243,14 @@ const ResetPasswordPage = () => {
       </div>
     </div>
   )
+}
+
+const ResetPasswordPage = () => {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-vibe-bg text-vibe-brown">Loading...</div>}>
+      <ResetPasswordContent />
+    </Suspense>
+  );
 }
 
 export default ResetPasswordPage
