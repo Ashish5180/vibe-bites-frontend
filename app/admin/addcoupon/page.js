@@ -39,7 +39,7 @@ export default function AddCouponPage() {
 
   useEffect(() => {
     // Fetch categories from backend
-    fetch("https://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/products/categories")
+    fetch("http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/products/categories")
       .then(res => res.json())
       .then(data => {
         setCategories(data.data.categories || []);
@@ -88,7 +88,7 @@ export default function AddCouponPage() {
         applicableUsers: form.applicableUsers ? form.applicableUsers.split(',').map(u => u.trim()) : [],
         excludedUsers: form.excludedUsers ? form.excludedUsers.split(',').map(u => u.trim()) : []
       };
-      const res = await fetch("https://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/coupons", {
+      const res = await fetch("http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/coupons", {
         method: "POST",
         headers: getAuthHeaders(),
         body: JSON.stringify(payload)

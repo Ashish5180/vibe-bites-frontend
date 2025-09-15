@@ -17,7 +17,7 @@ const AddCategoryPage = () => {
   const [creating, setCreating] = useState(false)
   const [editingId, setEditingId] = useState(null)
   const [editValues, setEditValues] = useState({ name: '', description: '', image: '' })
-  const apiBase = 'https://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'
+  const apiBase = 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'
 
   // Helper function to get auth headers
   const getAuthHeaders = () => {

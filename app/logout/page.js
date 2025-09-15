@@ -11,7 +11,7 @@ const LogoutPage = () => {
       try {
         const token = localStorage.getItem('token')
         if (token) {
-          await fetch(`${'https://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/auth/logout`, {
+          await fetch(`${'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/auth/logout`, {
             method: 'POST',
             headers: {
               'Authorization': `Bearer ${token}`,

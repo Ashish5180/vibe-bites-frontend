@@ -108,7 +108,7 @@ export const CartProvider = ({ children }) => {
   useEffect(() => {
     localStorage.setItem('vibe-bites-cart', JSON.stringify(state))
     // If logged-in, try to sync to server (best-effort)
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/cart/sync`, {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/cart/sync`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -164,7 +164,7 @@ export const CartProvider = ({ children }) => {
       const headers = {
         'Content-Type': 'application/json',
       };
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/coupons/validate`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/coupons/validate`, {
         method: 'POST',
         headers,
         headers: getAuthHeaders(),

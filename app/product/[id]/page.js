@@ -55,7 +55,7 @@ export default function ProductDetailPage() {
       setError(null)
       
       try {
-        const response = await fetch(`https://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/products/${params.id}`, {
+        const response = await fetch(`http://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/products/${params.id}`, {
           headers: { 'Cache-Control': 'no-cache' }
         })
         
