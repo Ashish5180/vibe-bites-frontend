@@ -18,6 +18,9 @@ function TrackOrderContent() {
 
   // Helper function to get auth headers
   const getAuthHeaders = () => {
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+      return { 'Content-Type': 'application/json' }
+    }
     const token = localStorage.getItem('token')
     return {
       'Authorization': `Bearer ${token}`,
@@ -110,6 +113,11 @@ function TrackOrderContent() {
     const description = prompt('Please provide additional details (optional):') || ''
 
     try {
+      if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+        addToast('Please login to cancel order', 'error')
+        return
+      }
+      
       const token = localStorage.getItem('token')
       const response = await fetch(`${'https://vibe-bites-backend.onrender.com/api'}/orders/${orderId}/cancel`, {
         method: 'POST',
@@ -159,6 +167,11 @@ function TrackOrderContent() {
     }
 
     try {
+      if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+        addToast('Please login to submit review', 'error')
+        return
+      }
+      
       const token = localStorage.getItem('token')
       const response = await fetch(`${'https://vibe-bites-backend.onrender.com/api'}/reviews/order/${orderData.order._id}`, {
         method: 'POST',

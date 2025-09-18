@@ -9,19 +9,21 @@ const LogoutPage = () => {
   useEffect(() => {
     const logout = async () => {
       try {
-        const token = localStorage.getItem('token')
-        if (token) {
-          await fetch(`${'https://vibe-bites-backend.onrender.com/api'}/auth/logout`, {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json'
-            }
-          });
+        if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+          const token = localStorage.getItem('token')
+          if (token) {
+            await fetch(`${'https://vibe-bites-backend.onrender.com/api'}/auth/logout`, {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+              }
+            });
+          }
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
         }
       } catch (e) {}
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
       setTimeout(() => {
         router.push("/login");
       }, 1200);

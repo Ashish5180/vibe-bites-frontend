@@ -31,6 +31,9 @@ const CheckoutPage = () => {
 
   // Helper function to get auth headers
   const getAuthHeaders = () => {
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+      return { 'Content-Type': 'application/json' }
+    }
     const token = localStorage.getItem('token')
     return {
       'Authorization': `Bearer ${token}`,
@@ -50,6 +53,12 @@ const CheckoutPage = () => {
   }
 
   const createOrder = async () => {
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+      addToast('Please login to place order', 'error')
+      router.push('/login')
+      return null
+    }
+    
     const token = localStorage.getItem('token')
     if (!token) {
       addToast('Please login to place order', 'error')

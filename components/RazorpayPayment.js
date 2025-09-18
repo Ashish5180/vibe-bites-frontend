@@ -10,6 +10,9 @@ const RazorpayPayment = ({ amount, orderId, onSuccess, onError, userInfo }) => {
 
   // Helper function to get auth headers
   const getAuthHeaders = () => {
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+      return { 'Content-Type': 'application/json' }
+    }
     const token = localStorage.getItem('token')
     return {
       'Authorization': `Bearer ${token}`,
