@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react'
 import { useToast } from '../../components/Toaster'
+import { buildApiUrl } from '../../utils/api'
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -33,7 +34,7 @@ const LoginPage = () => {
 
     try {
       const endpoint = isRegistering ? '/auth/register' : '/auth/login'
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || '/api'}${endpoint}`, {
+      const response = await fetch(buildApiUrl(endpoint), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

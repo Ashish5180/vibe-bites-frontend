@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import { useCart } from '../context/CartContext'
 import { useToast } from './Toaster'
 import { ShoppingCart, Search, Menu, X, User, Heart, LogOut } from 'lucide-react'
+import { buildApiUrl } from '../utils/api'
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -45,7 +46,7 @@ const Navbar = () => {
       router.push('/login')
       return
     }
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || '/api'}/auth/me`, {
+    fetch(buildApiUrl('/auth/me'), {
       headers: getAuthHeaders()
     })
       .then(r => r.json())

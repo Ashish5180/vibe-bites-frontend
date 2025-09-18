@@ -1,6 +1,7 @@
 'use client'
 
 import { createContext, useContext, useReducer, useEffect } from 'react'
+import { buildApiUrl } from '../utils/api'
 
 const CartContext = createContext()
 
@@ -108,7 +109,7 @@ export const CartProvider = ({ children }) => {
   useEffect(() => {
     localStorage.setItem('vibe-bites-cart', JSON.stringify(state))
     // If logged-in, try to sync to server (best-effort)
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || '/api'}/cart/sync`, {
+    fetch(buildApiUrl('/cart/sync'), {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -164,7 +165,7 @@ export const CartProvider = ({ children }) => {
       const headers = {
         'Content-Type': 'application/json',
       };
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || '/api'}/coupons/validate`, {
+      const res = await fetch(buildApiUrl('/coupons/validate'), {
         method: 'POST',
         headers,
         headers: getAuthHeaders(),
