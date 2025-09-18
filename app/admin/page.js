@@ -47,7 +47,7 @@ const AdminPage = () => {
 
   // Helper function to get auth headers
   const getAuthHeaders = () => {
-    if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined' || !isClient) {
       return { 'Content-Type': 'application/json' }
     }
     const token = localStorage.getItem('token')
