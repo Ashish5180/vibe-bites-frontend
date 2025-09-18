@@ -8,6 +8,7 @@ import { useToast } from '../../components/Toaster'
 import { Star, Package, Calendar, ExternalLink, LogOut } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { buildApiUrl } from '../../utils/api'
 
 const ProfilePage = () => {
   const [user, setUser] = useState(null)
@@ -36,7 +37,7 @@ const ProfilePage = () => {
           router.push('/login')
           return
         }
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/auth/profile`, {
+        const res = await fetch(buildApiUrl('/auth/profile'), {
           headers: getAuthHeaders()
         })
         const data = await res.json()
@@ -67,7 +68,7 @@ const ProfilePage = () => {
     const loadOrders = async () => {
       setOrdersLoading(true)
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/orders`, {
+        const res = await fetch(buildApiUrl('/orders'), {
           headers: getAuthHeaders()
         })
         const data = await res.json()
@@ -87,7 +88,7 @@ const ProfilePage = () => {
     const loadReviews = async () => {
       setReviewsLoading(true)
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/reviews/user`, {
+        const res = await fetch(buildApiUrl('/reviews/user'), {
           headers: getAuthHeaders()
         })
         const data = await res.json()

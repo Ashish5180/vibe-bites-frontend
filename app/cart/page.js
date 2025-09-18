@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import Navbar from '../../components/Navbar'
@@ -17,7 +17,7 @@ const CartPage = () => {
   const [availableCoupons, setAvailableCoupons] = useState([])
   const [loadingCoupons, setLoadingCoupons] = useState(true)
 
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchCoupons = async () => {
       try {
         const res = await fetch(`${'https://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/coupons`)

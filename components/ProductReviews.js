@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { Star, ThumbsUp, MessageCircle, User } from 'lucide-react'
 
@@ -26,7 +26,7 @@ const ProductReviews = ({ productId, productName }) => {
     }
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     async function fetchReviews() {
       setLoading(true)
       setError(null)

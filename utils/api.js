@@ -1,6 +1,9 @@
 // API utility functions
 const getApiUrl = () => {
-  return process.env.NEXT_PUBLIC_API_URL || '/api'
+  if (typeof window !== 'undefined') {
+    return process.env.NEXT_PUBLIC_API_URL || '/api'
+  }
+  return '/api'
 }
 
 const buildApiUrl = (endpoint) => {

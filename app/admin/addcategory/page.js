@@ -21,7 +21,9 @@ const AddCategoryPage = () => {
 
   // Helper function to get auth headers
   const getAuthHeaders = () => {
-    if (typeof window === 'undefined') return { 'Content-Type': 'application/json' }
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+      return { 'Content-Type': 'application/json' }
+    }
     const token = localStorage.getItem('token')
     return {
       'Authorization': `Bearer ${token}`,
@@ -40,7 +42,7 @@ const AddCategoryPage = () => {
     
     const checkAuth = async () => {
       try {
-        const token = localStorage.getItem('token')
+        const token = typeof localStorage !== 'undefined' ? localStorage.getItem('token') : null
         if (!token) {
           router.push('/login')
           return
@@ -294,7 +296,4 @@ const AddCategoryPage = () => {
   )
 }
 
-export default dynamic(() => Promise.resolve(AddCategoryPage), {
-  ssr: false,
-  loading: () => <div className="min-h-screen flex items-center justify-center bg-vibe-bg text-vibe-brown">Loading...</div>
-})
+export default dynamic(() => Promise.resolve(AddCategoryPage), { ssr: false })

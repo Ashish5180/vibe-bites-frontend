@@ -8,6 +8,7 @@ import ProductCard from "../../components/ProductCard";
 import FilterSidebar from "../../components/FilterSidebar";
 import { Filter, Grid, List } from "lucide-react";
 import Head from "next/head";
+import { getApiUrl } from "../../utils/api";
 
 function ProductsContent() {
 	const searchParams = useSearchParams();
@@ -21,7 +22,7 @@ function ProductsContent() {
 		search: searchParams.get("search") || "",
 	});
 	const [categories, setCategories] = useState([]);
-	const apiBase = process.env.NEXT_PUBLIC_API_URL || "https://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api";
+	const apiBase = getApiUrl();
 	const [isClient, setIsClient] = useState(false);
 
 	useEffect(() => {
