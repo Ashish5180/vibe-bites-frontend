@@ -1,5 +1,9 @@
 // API utility functions
 const getApiUrl = () => {
+  // Use environment variable if available, otherwise fallback to hardcoded URL
+  if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL
+  }
   return 'https://vibe-bites-backend.onrender.com/api'
 }
 
