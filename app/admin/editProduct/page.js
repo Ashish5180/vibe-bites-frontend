@@ -61,8 +61,10 @@ function EditProductContent() {
 
         if (!authResponse.ok) {
           // Token might be expired, clear it and redirect to login
-          localStorage.removeItem('token')
-          localStorage.removeItem('user')
+          if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+            localStorage.removeItem('token')
+            localStorage.removeItem('user')
+          }
           addToast('Please login to continue', 'error')
           router.push('/login')
           return

@@ -58,8 +58,10 @@ const CreateProductPage = () => {
         const res = await fetch(`${apiBase}/auth/me`, { headers: getAuthHeaders() })
         if (!res.ok) {
           // Token might be expired, clear it and redirect to login
-          localStorage.removeItem('token')
-          localStorage.removeItem('user')
+          if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+            localStorage.removeItem('token')
+            localStorage.removeItem('user')
+          }
           router.push('/login')
           return
         }
@@ -73,8 +75,10 @@ const CreateProductPage = () => {
         }
       } catch (e) {
         // Clear invalid token and redirect
-        localStorage.removeItem('token')
-        localStorage.removeItem('user')
+        if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+          localStorage.removeItem('token')
+          localStorage.removeItem('user')
+        }
         router.push('/login')
       } finally {
         setLoadingAuth(false)

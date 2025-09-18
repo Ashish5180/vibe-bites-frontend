@@ -89,8 +89,10 @@ const AdminPage = () => {
         
         if (!response.ok) {
           // Token might be expired, clear it and redirect to login
-          localStorage.removeItem('token')
-          localStorage.removeItem('user')
+          if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+            localStorage.removeItem('token')
+            localStorage.removeItem('user')
+          }
           router.push('/login')
           return
         }
@@ -111,8 +113,10 @@ const AdminPage = () => {
       } catch (error) {
         console.error('Auth check error:', error)
         // Clear invalid token and redirect
-        localStorage.removeItem('token')
-        localStorage.removeItem('user')
+        if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+          localStorage.removeItem('token')
+          localStorage.removeItem('user')
+        }
         router.push('/login')
       }
     }
@@ -290,8 +294,10 @@ const AdminPage = () => {
 
   const handleLogout = () => {
     // Clear localStorage
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
+    }
     router.push('/login')
     addToast('Logged out successfully', 'success')
   }
