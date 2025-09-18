@@ -21,6 +21,9 @@ function EditProductContent() {
 
   // Helper function to get auth headers
   const getAuthHeaders = () => {
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+      return { 'Content-Type': 'application/json' }
+    }
     const token = localStorage.getItem('token')
     return {
       'Authorization': `Bearer ${token}`,
@@ -39,6 +42,12 @@ function EditProductContent() {
 
       try {
         // Check if user is authenticated and is admin
+        if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+          addToast('Please login to continue', 'error')
+          router.push('/login')
+          return
+        }
+        
         const token = localStorage.getItem('token')
         if (!token) {
           addToast('Please login to continue', 'error')

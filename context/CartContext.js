@@ -164,41 +164,6 @@ export const CartProvider = ({ children }) => {
     dispatch({ type: 'CLEAR_CART' })
   }
 
-  const applyCoupon = async (couponCode) => {
-    try {
-      const headers = {
-        'Content-Type': 'application/json',
-      };
-      const res = await fetch(buildApiUrl('/coupons/validate'), {
-        method: 'POST',
-        headers,
-        headers: getAuthHeaders(),
-        body: JSON.stringify({ 
-          code: couponCode, 
-          orderAmount: getCartTotal(),
-          items: state.items 
-        }),
-        headers: getAuthHeaders()
-      });
-      const data = await res.json();
-      if (res.ok && data.success && data.data && data.data.coupon) {
-        dispatch({
-          type: 'APPLY_COUPON',
-          payload: { code: couponCode.toUpperCase(), ...data.data.coupon, discountAmount: data.data.discountAmount }
-        });
-        return { success: true, message: `Coupon ${couponCode.toUpperCase()} applied!` }
-      } else {
-        return { success: false, message: data.message || 'Invalid coupon code' }
-      }
-    } catch {
-      return { success: false, message: 'Network error' }
-    }
-  }
-
-  const removeCoupon = () => {
-    dispatch({ type: 'REMOVE_COUPON' })
-  }
-
   const getCartTotal = () => {
     const subtotal = state.items.reduce((total, item) => total + (item.price * item.quantity), 0)
     
@@ -218,6 +183,36 @@ export const CartProvider = ({ children }) => {
     }
 
     return subtotal - discount
+  }
+
+  const applyCoupon = async (couponCode) => {
+    try {
+      const res = await fetch(buildApiUrl('/coupons/validate'), {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ 
+          code: couponCode, 
+          orderAmount: getCartTotal(),
+          items: state.items 
+        })
+      });
+      const data = await res.json();
+      if (res.ok && data.success && data.data && data.data.coupon) {
+        dispatch({
+          type: 'APPLY_COUPON',
+          payload: { code: couponCode.toUpperCase(), ...data.data.coupon, discountAmount: data.data.discountAmount }
+        });
+        return { success: true, message: `Coupon ${couponCode.toUpperCase()} applied!` }
+      } else {
+        return { success: false, message: data.message || 'Invalid coupon code' }
+      }
+    } catch {
+      return { success: false, message: 'Network error' }
+    }
+  }
+
+  const removeCoupon = () => {
+    dispatch({ type: 'REMOVE_COUPON' })
   }
 
   const getCartCount = () => {

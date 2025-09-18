@@ -18,6 +18,9 @@ const CreateProductPage = () => {
 
   // Helper function to get auth headers
   const getAuthHeaders = () => {
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+      return { 'Content-Type': 'application/json' }
+    }
     const token = localStorage.getItem('token')
     return {
       'Authorization': `Bearer ${token}`,
@@ -41,6 +44,11 @@ const CreateProductPage = () => {
   useEffect(() => {
     const check = async () => {
       try {
+        if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+          router.push('/login')
+          return
+        }
+        
         const token = localStorage.getItem('token')
         if (!token) {
           router.push('/login')
