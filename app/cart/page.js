@@ -20,7 +20,7 @@ const CartPage = () => {
   useEffect(() => {
     const fetchCoupons = async () => {
       try {
-        const res = await fetch(`${'https://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/coupons`)
+        const res = await fetch(`${'https://vibe-bites-backend.onrender.com/api'}/coupons`)
         const data = await res.json()
         if (res.ok && data.success && data.data && data.data.coupons) {
           setAvailableCoupons(data.data.coupons)
