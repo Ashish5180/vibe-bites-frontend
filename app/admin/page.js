@@ -46,7 +46,7 @@ const AdminPage = () => {
   const { addToast } = useToast()
 
   // Helper function to get auth headers
-  const getAuthHeaders = () => {
+  const getAuthHeaders = useCallback(() => {
     if (typeof window === 'undefined' || typeof localStorage === 'undefined' || !isClient) {
       return { 'Content-Type': 'application/json' }
     }
@@ -55,7 +55,7 @@ const AdminPage = () => {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     }
-  }
+  }, [isClient])
 
   // Check authentication and admin role
   // Set client state
@@ -168,7 +168,7 @@ const AdminPage = () => {
       console.error('Error loading dashboard stats:', error)
       addToast('Error loading dashboard data', 'error')
     }
-  }, [addToast])
+  }, [addToast, getAuthHeaders])
 
   const loadUsers = useCallback(async () => {
     try {
@@ -192,7 +192,7 @@ const AdminPage = () => {
       console.error('Error loading users:', error)
       addToast('Error loading users', 'error')
     }
-  }, [currentPage, searchQuery, filterStatus, addToast])
+  }, [currentPage, searchQuery, filterStatus, addToast, getAuthHeaders])
 
   const loadProducts = useCallback(async () => {
     try {
@@ -216,7 +216,7 @@ const AdminPage = () => {
       console.error('Error loading products:', error)
       addToast('Error loading products', 'error')
     }
-  }, [currentPage, searchQuery, filterStatus, addToast])
+  }, [currentPage, searchQuery, filterStatus, addToast, getAuthHeaders])
 
   const loadOrders = useCallback(async () => {
     try {
@@ -244,7 +244,7 @@ const AdminPage = () => {
       console.error('Error loading orders:', error)
       addToast('Error loading orders', 'error')
     }
-  }, [currentPage, searchQuery, filterStatus, addToast])
+  }, [currentPage, searchQuery, filterStatus, addToast, getAuthHeaders])
 
   const loadCoupons = useCallback(async () => {
     try {
@@ -267,7 +267,7 @@ const AdminPage = () => {
       console.error('Error loading coupons:', error)
       addToast('Error loading coupons', 'error')
     }
-  }, [currentPage, filterStatus, addToast])
+  }, [currentPage, filterStatus, addToast, getAuthHeaders])
 
   const loadReviews = useCallback(async () => {
     try {
@@ -290,7 +290,7 @@ const AdminPage = () => {
       console.error('Error loading reviews:', error)
       addToast('Error loading reviews', 'error')
     }
-  }, [currentPage, filterStatus, addToast])
+  }, [currentPage, filterStatus, addToast, getAuthHeaders])
 
   const handleLogout = () => {
     // Clear localStorage
