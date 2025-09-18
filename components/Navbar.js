@@ -20,6 +20,9 @@ const Navbar = () => {
 
   // Helper function to get auth headers
   const getAuthHeaders = () => {
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+      return { 'Content-Type': 'application/json' }
+    }
     const token = localStorage.getItem('token')
     return {
       'Authorization': `Bearer ${token}`,
@@ -41,6 +44,11 @@ const Navbar = () => {
   }
 
   const handleUserClick = () => {
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+      router.push('/login')
+      return
+    }
+    
     const token = localStorage.getItem('token')
     if (!token) {
       router.push('/login')
@@ -279,7 +287,7 @@ const Navbar = () => {
             </div>
 
             {/* Mobile Logout Button */}
-            {localStorage.getItem('token') && (
+            {(typeof window !== 'undefined' && typeof localStorage !== 'undefined' && localStorage.getItem('token')) && (
               <div className="px-3 py-2 border-t border-vibe-cookie/20">
                 <button
                   onClick={() => {

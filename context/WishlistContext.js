@@ -22,11 +22,15 @@ export const WishlistProvider = ({ children }) => {
   const [state, dispatch] = useReducer(wishlistReducer, [])
 
   useEffect(() => {
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') return
+    
     const saved = localStorage.getItem('vibe-bites-wishlist')
     if (saved) dispatch({ type: 'LOAD', payload: JSON.parse(saved) })
   }, [])
 
   useEffect(() => {
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') return
+    
     localStorage.setItem('vibe-bites-wishlist', JSON.stringify(state))
   }, [state])
 

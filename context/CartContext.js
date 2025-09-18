@@ -89,6 +89,9 @@ export const CartProvider = ({ children }) => {
 
   // Helper function to get auth headers
   const getAuthHeaders = () => {
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+      return { 'Content-Type': 'application/json' }
+    }
     const token = localStorage.getItem('token')
     return {
       'Authorization': `Bearer ${token}`,
@@ -98,6 +101,8 @@ export const CartProvider = ({ children }) => {
 
   // Load cart from localStorage on mount
   useEffect(() => {
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') return
+    
     const savedCart = localStorage.getItem('vibe-bites-cart')
     if (savedCart) {
       const parsedCart = JSON.parse(savedCart)
@@ -107,13 +112,12 @@ export const CartProvider = ({ children }) => {
 
   // Save cart to localStorage whenever it changes
   useEffect(() => {
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') return
+    
     localStorage.setItem('vibe-bites-cart', JSON.stringify(state))
     // If logged-in, try to sync to server (best-effort)
     fetch(buildApiUrl('/cart/sync'), {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
       headers: getAuthHeaders(),
       body: JSON.stringify(state)
     }).catch(() => {})

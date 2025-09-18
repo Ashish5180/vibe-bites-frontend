@@ -56,7 +56,7 @@ const CategorySection = () => {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch('https://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api/categories');
+        const res = await fetch('https://vibe-bites-backend.onrender.com/api/categories');
         if (!res.ok) throw new Error('Failed to fetch categories');
         const data = await res.json();
         const apiCategories = data.data.categories || [];
