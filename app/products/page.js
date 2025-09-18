@@ -21,7 +21,7 @@ function ProductsContent() {
 		search: searchParams.get("search") || "",
 	});
 	const [categories, setCategories] = useState([]);
-	const apiBase = process.env.NEXT_PUBLIC_API_URL || "/api";
+	const apiBase = process.env.NEXT_PUBLIC_API_URL || "https://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api";
 	const [isClient, setIsClient] = useState(false);
 
 	useEffect(() => {

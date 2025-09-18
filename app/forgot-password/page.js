@@ -24,7 +24,7 @@ const ForgotPasswordPage = () => {
     setIsLoading(true)
 
     try {
-      const response = await fetch(`${'/api'}/auth/forgot-password`, {
+      const response = await fetch(`${'https://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/api'}/auth/forgot-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
