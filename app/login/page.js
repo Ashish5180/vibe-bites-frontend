@@ -52,7 +52,7 @@ const LoginPage = () => {
         )
         
         // Store user data in localStorage for profile access
-        if (data.data && data.data.user) {
+        if (data.data && data.data.user && typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
           localStorage.setItem('user', JSON.stringify(data.data.user))
           // If token is provided in response, store it too
           if (data.token) {

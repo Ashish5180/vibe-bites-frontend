@@ -19,6 +19,9 @@ const ProductReviews = ({ productId, productName }) => {
 
   // Helper function to get auth headers
   const getAuthHeaders = () => {
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+      return { 'Content-Type': 'application/json' }
+    }
     const token = localStorage.getItem('token')
     return {
       'Authorization': `Bearer ${token}`,
@@ -52,6 +55,11 @@ const ProductReviews = ({ productId, productName }) => {
     e.preventDefault()
     async function submitReview() {
       try {
+        if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+          alert('Please login to submit a review')
+          return
+        }
+        
         const token = localStorage.getItem('token')
         if (!token) {
           alert('Please login to submit a review')

@@ -22,6 +22,9 @@ const ProfilePage = () => {
 
   // Helper function to get auth headers
   const getAuthHeaders = () => {
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+      return { 'Content-Type': 'application/json' }
+    }
     const token = localStorage.getItem('token')
     return {
       'Authorization': `Bearer ${token}`,
@@ -32,6 +35,11 @@ const ProfilePage = () => {
   useEffect(() => {
     const loadProfile = async () => {
       try {
+        if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+          router.push('/login')
+          return
+        }
+        
         const token = localStorage.getItem('token')
         if (!token) {
           router.push('/login')
@@ -43,19 +51,23 @@ const ProfilePage = () => {
         const data = await res.json()
         if (data.success) {
           setUser(data.data.user)
-          if (!localStorage.getItem('user')) {
+          if (typeof window !== 'undefined' && typeof localStorage !== 'undefined' && !localStorage.getItem('user')) {
             localStorage.setItem('user', JSON.stringify(data.data.user))
           }
         } else {
-          localStorage.removeItem('token')
-          localStorage.removeItem('user')
+          if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+            localStorage.removeItem('token')
+            localStorage.removeItem('user')
+          }
           router.push('/login')
         }
       } catch (e) {
         console.error('Profile load error:', e)
         addToast('Failed to load profile', 'error')
-        localStorage.removeItem('token')
-        localStorage.removeItem('user')
+        if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+          localStorage.removeItem('token')
+          localStorage.removeItem('user')
+        }
         router.push('/login')
       } finally {
         setLoading(false)
