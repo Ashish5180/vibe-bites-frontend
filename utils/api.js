@@ -1,9 +1,6 @@
 // API utility functions
 const getApiUrl = () => {
-  if (typeof window !== 'undefined') {
-    return process.env.NEXT_PUBLIC_API_URL || '/api'
-  }
-  return '/api'
+  return 'https://vibe-bites-backend.onrender.com/api'
 }
 
 const buildApiUrl = (endpoint) => {

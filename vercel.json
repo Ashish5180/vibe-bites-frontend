@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://vibebitstest-env.eba-ubvupniq.ap-south-1.elasticbeanstalk.com/:path*"
+      "destination": "https://vibe-bites-backend.onrender.com/:path*"
     },
     {
       "source": "/(.*)",
