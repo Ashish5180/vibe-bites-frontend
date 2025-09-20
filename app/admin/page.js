@@ -461,7 +461,6 @@ Verified: ${review.verified ? 'Yes' : 'No'}
     }
   }
 
-  if (!isClient || isLoading) {
   // Early return for loading or non-client state
   if (!isClient || isLoading || !user) {
     return (
@@ -1230,7 +1229,9 @@ const AdminPageWithErrorBoundary = () => {
   )
 }
 
-export default dynamic(() => Promise.resolve(AdminPageWithErrorBoundary), {
-  ssr: false,
-  loading: () => <div className="min-h-screen flex items-center justify-center bg-vibe-bg text-vibe-brown">Loading Admin Panel...</div>
+// Export with error boundary
+const ExportedComponent = dynamic(() => Promise.resolve(AdminPageWithErrorBoundary), {
+  ssr: false
 })
+
+export default ExportedComponent
