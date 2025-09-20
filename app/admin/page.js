@@ -354,7 +354,7 @@ const AdminPage = () => {
 
   const handleUserStatusToggle = async (userId, currentStatus) => {
     try {
-      const response = await fetch(`${'https://vibe-bites-backend.onrender.com/api'}/admin/users/${userId}/status`, {
+      const response = await fetch(`${API_BASE_URL}/admin/users/${userId}/status`, {
         method: 'PUT',
         headers: getAuthHeaders(),
         body: JSON.stringify({ isActive: !currentStatus })
@@ -374,7 +374,7 @@ const AdminPage = () => {
 
   const handleOrderStatusUpdate = async (orderId, newStatus) => {
     try {
-      const response = await fetch(`${'https://vibe-bites-backend.onrender.com/api'}/admin/orders/${orderId}/status`, {
+      const response = await fetch(`${API_BASE_URL}/admin/orders/${orderId}/status`, {
         method: 'PUT',
         headers: getAuthHeaders(),
         body: JSON.stringify({ status: newStatus })
@@ -395,7 +395,7 @@ const AdminPage = () => {
 
   const handleReviewStatusToggle = async (reviewId, isActive) => {
     try {
-      const response = await fetch(`${'https://vibe-bites-backend.onrender.com/api'}/reviews/admin/${reviewId}/status`, {
+      const response = await fetch(`${API_BASE_URL}/reviews/admin/${reviewId}/status`, {
         method: 'PUT',
         headers: getAuthHeaders(),
         body: JSON.stringify({ isActive })
@@ -434,7 +434,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
     if (!confirm(`Are you sure you want to delete this ${type}?`)) return
 
     try {
-      const response = await fetch(`${'https://vibe-bites-backend.onrender.com/api'}/admin/${type}/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/admin/${type}/${id}`, {
         method: 'DELETE',
         headers: getAuthHeaders()
       })
@@ -476,7 +476,7 @@ Verified: ${review.verified ? 'Yes' : 'No'}
       <div className="min-h-screen bg-vibe-bg flex items-center justify-center">
         <div className="text-center text-vibe-brown">
           <h2 className="text-2xl font-bold mb-4">Access Denied</h2>
-          <p>You don't have admin privileges to access this page.</p>
+          <p>You don&apos;t have admin privileges to access this page.</p>
         </div>
       </div>
     )
