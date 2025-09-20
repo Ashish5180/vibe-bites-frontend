@@ -32,6 +32,7 @@ const AdminPage = () => {
   const [isClient, setIsClient] = useState(false)
   const [user, setUser] = useState(null)
   const [dashboardStats, setDashboardStats] = useState(null)
+  const [isDashboardLoading, setIsDashboardLoading] = useState(false)
   const [users, setUsers] = useState([])
   const [products, setProducts] = useState([])
   const [orders, setOrders] = useState([])
@@ -123,6 +124,41 @@ const AdminPage = () => {
     checkAuth()
   }, [isClient, router, addToast])
 
+  // Define all callback functions first
+  const loadDashboardStats = useCallback(async () => {
+    if (!isClient) return;
+    
+    setIsDashboardLoading(true);
+    try {
+      console.log('Loading dashboard stats...');
+      const response = await fetch(`${'https://vibe-bites-backend.onrender.com/api'}/admin/dashboard`, {
+        headers: getAuthHeaders()
+      })
+
+      console.log('Dashboard response status:', response.status);
+      
+      if (response.ok) {
+        const data = await response.json()
+        console.log('Dashboard data received:', data)
+        if (data.success && data.data) {
+          setDashboardStats(data.data)
+        } else {
+          console.error('Dashboard API returned success=false:', data);
+          addToast('Failed to load dashboard data', 'error')
+        }
+      } else {
+        const errorText = await response.text();
+        console.error('Dashboard fetch failed:', response.status, response.statusText, errorText)
+        addToast(`Failed to load dashboard data: ${response.status}`, 'error')
+      }
+    } catch (error) {
+      console.error('Error loading dashboard stats:', error)
+      addToast('Error loading dashboard data', 'error')
+    } finally {
+      setIsDashboardLoading(false);
+    }
+  }, [addToast, getAuthHeaders, isClient])
+
   // Load dashboard data
   useEffect(() => {
     if (user && activeTab === 'dashboard') {
@@ -152,23 +188,6 @@ const AdminPage = () => {
       }
     }
   }, [user, activeTab, currentPage, searchQuery, filterStatus, loadUsers, loadProducts, loadOrders, loadCoupons, loadReviews])
-
-  const loadDashboardStats = useCallback(async () => {
-    try {
-      const response = await fetch(`${'https://vibe-bites-backend.onrender.com/api'}/admin/dashboard`, {
-        headers: getAuthHeaders()
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        console.log('Dashboard data received:', data.data)
-        setDashboardStats(data.data)
-      }
-    } catch (error) {
-      console.error('Error loading dashboard stats:', error)
-      addToast('Error loading dashboard data', 'error')
-    }
-  }, [addToast, getAuthHeaders])
 
   const loadUsers = useCallback(async () => {
     try {
@@ -499,56 +518,62 @@ Verified: ${review.verified ? 'Yes' : 'No'}
         </div>
 
         {/* Dashboard Content */}
-        {activeTab === 'dashboard' && dashboardStats && (
+        {activeTab === 'dashboard' && (
           <div className="space-y-6">
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-vibe-cookie">
-                <div className="flex items-center">
-                  <div className="p-2 bg-blue-100 rounded-lg">
-                    <Users className="h-6 w-6 text-blue-600" />
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">Total Users</p>
-                    <p className="text-2xl font-bold text-vibe-brown">{dashboardStats.stats.totalUsers}</p>
-                  </div>
-                </div>
+            {isDashboardLoading ? (
+              <div className="flex items-center justify-center min-h-64">
+                <div className="text-vibe-brown text-lg">Loading dashboard data...</div>
               </div>
+            ) : dashboardStats ? (
+              <>
+                {/* Stats Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  <div className="bg-white p-6 rounded-lg shadow-sm border border-vibe-cookie">
+                    <div className="flex items-center">
+                      <div className="p-2 bg-blue-100 rounded-lg">
+                        <Users className="h-6 w-6 text-blue-600" />
+                      </div>
+                      <div className="ml-4">
+                        <p className="text-sm font-medium text-gray-600">Total Users</p>
+                        <p className="text-2xl font-bold text-vibe-brown">{dashboardStats.stats?.totalUsers || 0}</p>
+                      </div>
+                    </div>
+                  </div>
 
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-vibe-cookie">
-                <div className="flex items-center">
-                  <div className="p-2 bg-green-100 rounded-lg">
-                    <Package className="h-6 w-6 text-green-600" />
+                  <div className="bg-white p-6 rounded-lg shadow-sm border border-vibe-cookie">
+                    <div className="flex items-center">
+                      <div className="p-2 bg-green-100 rounded-lg">
+                        <Package className="h-6 w-6 text-green-600" />
+                      </div>
+                      <div className="ml-4">
+                        <p className="text-sm font-medium text-gray-600">Total Products</p>
+                        <p className="text-2xl font-bold text-vibe-brown">{dashboardStats.stats?.totalProducts || 0}</p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">Total Products</p>
-                    <p className="text-2xl font-bold text-vibe-brown">{dashboardStats.stats.totalProducts}</p>
-                  </div>
-                </div>
-              </div>
 
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-vibe-cookie">
-                <div className="flex items-center">
-                  <div className="p-2 bg-purple-100 rounded-lg">
-                    <ShoppingCart className="h-6 w-6 text-purple-600" />
+                  <div className="bg-white p-6 rounded-lg shadow-sm border border-vibe-cookie">
+                    <div className="flex items-center">
+                      <div className="p-2 bg-purple-100 rounded-lg">
+                        <ShoppingCart className="h-6 w-6 text-purple-600" />
+                      </div>
+                      <div className="ml-4">
+                        <p className="text-sm font-medium text-gray-600">Total Orders</p>
+                        <p className="text-2xl font-bold text-vibe-brown">{dashboardStats.stats?.totalOrders || 0}</p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">Total Orders</p>
-                    <p className="text-2xl font-bold text-vibe-brown">{dashboardStats.stats.totalOrders}</p>
-                  </div>
-                </div>
-              </div>
 
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-vibe-cookie">
-                <div className="flex items-center">
-                  <div className="p-2 bg-yellow-100 rounded-lg">
-                    <DollarSign className="h-6 w-6 text-yellow-600" />
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">Total Revenue</p>
-                    <p className="text-2xl font-bold text-vibe-brown">₹{dashboardStats.stats.totalRevenue.toLocaleString()}</p>
-                  </div>
-                </div>
+                  <div className="bg-white p-6 rounded-lg shadow-sm border border-vibe-cookie">
+                    <div className="flex items-center">
+                      <div className="p-2 bg-yellow-100 rounded-lg">
+                        <DollarSign className="h-6 w-6 text-yellow-600" />
+                      </div>
+                      <div className="ml-4">
+                        <p className="text-sm font-medium text-gray-600">Total Revenue</p>
+                        <p className="text-2xl font-bold text-vibe-brown">₹{(dashboardStats.stats?.totalRevenue || 0).toLocaleString()}</p>
+                      </div>
+                    </div>
               </div>
             </div>
 
@@ -605,6 +630,12 @@ Verified: ${review.verified ? 'Yes' : 'No'}
                 </table>
               </div>
             </div>
+              </>
+            ) : (
+              <div className="flex items-center justify-center min-h-64">
+                <div className="text-vibe-brown text-lg">Failed to load dashboard data. Please try refreshing the page.</div>
+              </div>
+            )}
           </div>
         )}
 
