@@ -1,7 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { 
@@ -26,7 +26,25 @@ import {
 } from 'lucide-react'
 import { useToast } from '../../components/Toaster'
 
+// Create error boundary component
+const ErrorBoundary = ({ children, fallback }) => {
+  const [hasError, setHasError] = useState(false)
+  
+  useEffect(() => {
+    const handleError = () => setHasError(true)
+    window.addEventListener('error', handleError)
+    return () => window.removeEventListener('error', handleError)
+  }, [])
+  
+  if (hasError) {
+    return fallback || <div>Something went wrong</div>
+  }
+  
+  return children
+}
+
 const AdminPage = () => {
+  // Initialize all state variables first
   const [activeTab, setActiveTab] = useState('dashboard')
   const [isLoading, setIsLoading] = useState(true)
   const [isClient, setIsClient] = useState(false)
@@ -46,7 +64,10 @@ const AdminPage = () => {
   const router = useRouter()
   const { addToast } = useToast()
 
-  // Helper function to get auth headers
+  // Memoize API base URL to prevent recreation
+  const API_BASE_URL = useMemo(() => 'https://vibe-bites-backend.onrender.com/api', [])
+
+  // Helper function to get auth headers - memoized to prevent recreation
   const getAuthHeaders = useCallback(() => {
     if (typeof window === 'undefined' || typeof localStorage === 'undefined' || !isClient) {
       return { 'Content-Type': 'application/json' }
@@ -58,12 +79,179 @@ const AdminPage = () => {
     }
   }, [isClient])
 
-  // Check authentication and admin role
-  // Set client state
+  // Set client state first
   useEffect(() => {
     setIsClient(true)
   }, [])
 
+  // Define all API functions first to prevent hoisting issues
+  const loadDashboardStats = useCallback(async () => {
+    if (!isClient) return;
+    
+    setIsDashboardLoading(true);
+    try {
+      console.log('Loading dashboard stats...');
+      const response = await fetch(`${API_BASE_URL}/admin/dashboard`, {
+        headers: getAuthHeaders()
+      })
+
+      console.log('Dashboard response status:', response.status);
+      
+      if (response.ok) {
+        const data = await response.json()
+        console.log('Dashboard data received:', data)
+        if (data.success && data.data) {
+          setDashboardStats(data.data)
+        } else {
+          console.error('Dashboard API returned success=false:', data);
+          addToast('Failed to load dashboard data', 'error')
+        }
+      } else {
+        const errorText = await response.text();
+        console.error('Dashboard fetch failed:', response.status, response.statusText, errorText)
+        addToast(`Failed to load dashboard data: ${response.status}`, 'error')
+      }
+    } catch (error) {
+      console.error('Error loading dashboard stats:', error)
+      addToast('Error loading dashboard data', 'error')
+    } finally {
+      setIsDashboardLoading(false);
+    }
+  }, [addToast, getAuthHeaders, isClient, API_BASE_URL])
+
+  const loadUsers = useCallback(async () => {
+    if (!isClient) return;
+    
+    try {
+      const params = new URLSearchParams({
+        page: currentPage,
+        limit: 10,
+        search: searchQuery,
+        status: filterStatus
+      })
+
+      const response = await fetch(`${API_BASE_URL}/admin/users?${params}`, {
+        headers: getAuthHeaders()
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setUsers(data.data.users)
+        setTotalPages(data.data.pagination.totalPages)
+      }
+    } catch (error) {
+      console.error('Error loading users:', error)
+      addToast('Error loading users', 'error')
+    }
+  }, [currentPage, searchQuery, filterStatus, addToast, getAuthHeaders, isClient, API_BASE_URL])
+
+  const loadProducts = useCallback(async () => {
+    if (!isClient) return;
+    
+    try {
+      const params = new URLSearchParams({
+        page: currentPage,
+        limit: 10,
+        search: searchQuery,
+        status: filterStatus
+      })
+
+      const response = await fetch(`${API_BASE_URL}/admin/products?${params}`, {
+        headers: getAuthHeaders()
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setProducts(data.data.products)
+        setTotalPages(data.data.pagination.totalPages)
+      }
+    } catch (error) {
+      console.error('Error loading products:', error)
+      addToast('Error loading products', 'error')
+    }
+  }, [currentPage, searchQuery, filterStatus, addToast, getAuthHeaders, isClient, API_BASE_URL])
+
+  const loadOrders = useCallback(async () => {
+    if (!isClient) return;
+    
+    try {
+      let statusParam = filterStatus
+
+      const params = new URLSearchParams({
+        page: currentPage,
+        limit: 10,
+        search: searchQuery,
+        status: statusParam
+      })
+
+      const response = await fetch(`${API_BASE_URL}/admin/orders?${params}`, {
+        headers: getAuthHeaders()
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        let filteredOrders = data.data.orders
+
+        setOrders(filteredOrders)
+        setTotalPages(data.data.pagination.totalPages)
+      }
+    } catch (error) {
+      console.error('Error loading orders:', error)
+      addToast('Error loading orders', 'error')
+    }
+  }, [currentPage, searchQuery, filterStatus, addToast, getAuthHeaders, isClient, API_BASE_URL])
+
+  const loadCoupons = useCallback(async () => {
+    if (!isClient) return;
+    
+    try {
+      const params = new URLSearchParams({
+        page: currentPage,
+        limit: 10,
+        status: filterStatus
+      })
+
+      const response = await fetch(`${API_BASE_URL}/admin/coupons?${params}`, {
+        headers: getAuthHeaders()
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setCoupons(data.data.coupons)
+        setTotalPages(data.data.pagination.totalPages)
+      }
+    } catch (error) {
+      console.error('Error loading coupons:', error)
+      addToast('Error loading coupons', 'error')
+    }
+  }, [currentPage, filterStatus, addToast, getAuthHeaders, isClient, API_BASE_URL])
+
+  const loadReviews = useCallback(async () => {
+    if (!isClient) return;
+    
+    try {
+      const params = new URLSearchParams({
+        page: currentPage,
+        limit: 10,
+        status: filterStatus
+      })
+
+      const response = await fetch(`${API_BASE_URL}/reviews/admin?${params}`, {
+        headers: getAuthHeaders()
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setReviews(data.data.reviews)
+        setTotalPages(data.data.pagination.totalPages)
+      }
+    } catch (error) {
+      console.error('Error loading reviews:', error)
+      addToast('Error loading reviews', 'error')
+    }
+  }, [currentPage, filterStatus, addToast, getAuthHeaders, isClient, API_BASE_URL])
+
+  // Authentication check effect
   useEffect(() => {
     if (!isClient) return
     
@@ -81,7 +269,7 @@ const AdminPage = () => {
           return
         }
 
-        const response = await fetch(`${'https://vibe-bites-backend.onrender.com/api'}/auth/me`, {
+        const response = await fetch(`${API_BASE_URL}/auth/me`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -122,51 +310,16 @@ const AdminPage = () => {
       }
     }
     checkAuth()
-  }, [isClient, router, addToast])
+  }, [isClient, router, addToast, API_BASE_URL])
 
-  // Define all callback functions first
-  const loadDashboardStats = useCallback(async () => {
-    if (!isClient) return;
-    
-    setIsDashboardLoading(true);
-    try {
-      console.log('Loading dashboard stats...');
-      const response = await fetch(`${'https://vibe-bites-backend.onrender.com/api'}/admin/dashboard`, {
-        headers: getAuthHeaders()
-      })
-
-      console.log('Dashboard response status:', response.status);
-      
-      if (response.ok) {
-        const data = await response.json()
-        console.log('Dashboard data received:', data)
-        if (data.success && data.data) {
-          setDashboardStats(data.data)
-        } else {
-          console.error('Dashboard API returned success=false:', data);
-          addToast('Failed to load dashboard data', 'error')
-        }
-      } else {
-        const errorText = await response.text();
-        console.error('Dashboard fetch failed:', response.status, response.statusText, errorText)
-        addToast(`Failed to load dashboard data: ${response.status}`, 'error')
-      }
-    } catch (error) {
-      console.error('Error loading dashboard stats:', error)
-      addToast('Error loading dashboard data', 'error')
-    } finally {
-      setIsDashboardLoading(false);
-    }
-  }, [addToast, getAuthHeaders, isClient])
-
-  // Load dashboard data
+  // Load dashboard data effect
   useEffect(() => {
     if (user && activeTab === 'dashboard') {
       loadDashboardStats()
     }
   }, [user, activeTab, loadDashboardStats])
 
-  // Load data based on active tab
+  // Load data based on active tab effect
   useEffect(() => {
     if (user) {
       switch (activeTab) {
@@ -188,128 +341,6 @@ const AdminPage = () => {
       }
     }
   }, [user, activeTab, currentPage, searchQuery, filterStatus, loadUsers, loadProducts, loadOrders, loadCoupons, loadReviews])
-
-  const loadUsers = useCallback(async () => {
-    try {
-      const params = new URLSearchParams({
-        page: currentPage,
-        limit: 10,
-        search: searchQuery,
-        status: filterStatus
-      })
-
-      const response = await fetch(`${'https://vibe-bites-backend.onrender.com/api'}/admin/users?${params}`, {
-        headers: getAuthHeaders()
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        setUsers(data.data.users)
-        setTotalPages(data.data.pagination.totalPages)
-      }
-    } catch (error) {
-      console.error('Error loading users:', error)
-      addToast('Error loading users', 'error')
-    }
-  }, [currentPage, searchQuery, filterStatus, addToast, getAuthHeaders])
-
-  const loadProducts = useCallback(async () => {
-    try {
-      const params = new URLSearchParams({
-        page: currentPage,
-        limit: 10,
-        search: searchQuery,
-        status: filterStatus
-      })
-
-      const response = await fetch(`${'https://vibe-bites-backend.onrender.com/api'}/admin/products?${params}`, {
-        headers: getAuthHeaders()
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        setProducts(data.data.products)
-        setTotalPages(data.data.pagination.totalPages)
-      }
-    } catch (error) {
-      console.error('Error loading products:', error)
-      addToast('Error loading products', 'error')
-    }
-  }, [currentPage, searchQuery, filterStatus, addToast, getAuthHeaders])
-
-  const loadOrders = useCallback(async () => {
-    try {
-      let statusParam = filterStatus
-
-      const params = new URLSearchParams({
-        page: currentPage,
-        limit: 10,
-        search: searchQuery,
-        status: statusParam
-      })
-
-      const response = await fetch(`${'https://vibe-bites-backend.onrender.com/api'}/admin/orders?${params}`, {
-        headers: getAuthHeaders()
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        let filteredOrders = data.data.orders
-
-        setOrders(filteredOrders)
-        setTotalPages(data.data.pagination.totalPages)
-      }
-    } catch (error) {
-      console.error('Error loading orders:', error)
-      addToast('Error loading orders', 'error')
-    }
-  }, [currentPage, searchQuery, filterStatus, addToast, getAuthHeaders])
-
-  const loadCoupons = useCallback(async () => {
-    try {
-      const params = new URLSearchParams({
-        page: currentPage,
-        limit: 10,
-        status: filterStatus
-      })
-
-      const response = await fetch(`${'https://vibe-bites-backend.onrender.com/api'}/admin/coupons?${params}`, {
-        headers: getAuthHeaders()
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        setCoupons(data.data.coupons)
-        setTotalPages(data.data.pagination.totalPages)
-      }
-    } catch (error) {
-      console.error('Error loading coupons:', error)
-      addToast('Error loading coupons', 'error')
-    }
-  }, [currentPage, filterStatus, addToast, getAuthHeaders])
-
-  const loadReviews = useCallback(async () => {
-    try {
-      const params = new URLSearchParams({
-        page: currentPage,
-        limit: 10,
-        status: filterStatus
-      })
-
-      const response = await fetch(`${'https://vibe-bites-backend.onrender.com/api'}/reviews/admin?${params}`, {
-        headers: getAuthHeaders()
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        setReviews(data.data.reviews)
-        setTotalPages(data.data.pagination.totalPages)
-      }
-    } catch (error) {
-      console.error('Error loading reviews:', error)
-      addToast('Error loading reviews', 'error')
-    }
-  }, [currentPage, filterStatus, addToast, getAuthHeaders])
 
   const handleLogout = () => {
     // Clear localStorage
@@ -431,9 +462,23 @@ Verified: ${review.verified ? 'Yes' : 'No'}
   }
 
   if (!isClient || isLoading) {
+  // Early return for loading or non-client state
+  if (!isClient || isLoading || !user) {
     return (
       <div className="min-h-screen bg-vibe-bg flex items-center justify-center">
         <div className="text-vibe-brown text-xl">Loading...</div>
+      </div>
+    )
+  }
+
+  // Additional safety check for user role
+  if (user && user.role !== 'admin') {
+    return (
+      <div className="min-h-screen bg-vibe-bg flex items-center justify-center">
+        <div className="text-center text-vibe-brown">
+          <h2 className="text-2xl font-bold mb-4">Access Denied</h2>
+          <p>You don't have admin privileges to access this page.</p>
+        </div>
       </div>
     )
   }
@@ -1161,7 +1206,31 @@ Verified: ${review.verified ? 'Yes' : 'No'}
   )
 }
 
-export default dynamic(() => Promise.resolve(AdminPage), {
+// Wrap the component with error boundary
+const AdminPageWithErrorBoundary = () => {
+  return (
+    <ErrorBoundary 
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-vibe-bg text-vibe-brown">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold mb-4">Something went wrong</h1>
+            <p className="mb-4">Please refresh the page or try again later.</p>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="px-4 py-2 bg-vibe-brown text-white rounded-md hover:bg-opacity-90"
+            >
+              Refresh Page
+            </button>
+          </div>
+        </div>
+      }
+    >
+      <AdminPage />
+    </ErrorBoundary>
+  )
+}
+
+export default dynamic(() => Promise.resolve(AdminPageWithErrorBoundary), {
   ssr: false,
-  loading: () => <div className="min-h-screen flex items-center justify-center bg-vibe-bg text-vibe-brown">Loading...</div>
+  loading: () => <div className="min-h-screen flex items-center justify-center bg-vibe-bg text-vibe-brown">Loading Admin Panel...</div>
 })
